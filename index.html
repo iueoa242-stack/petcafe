@@ -1,0 +1,764 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><title>ペットカフェ!!</title>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@700&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:GS;src:local('GenSenRounded2JP-B'),url(GenSenRounded2JP-B.ttf)}
+:root{color-scheme:light;--gr:#c4ffcc;--br:#7a5228}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:#333;font-family:GS,'Zen Maru Gothic','Hiragino Maru Gothic ProN',sans-serif;font-weight:700;color:#222}
+#app{position:relative;max-width:480px;height:100%;margin:auto;display:flex;flex-direction:column;background:var(--gr);overflow:hidden;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+#top{background:var(--br);color:#fff;padding:6px 10px;font-size:15px;line-height:1.4}
+#main{flex:1;position:relative;overflow:hidden}
+.scr{position:absolute;inset:0;display:none;flex-direction:column;padding:8px}.scr.on{display:flex}
+#side{position:absolute;top:8px;right:8px;z-index:5;display:flex;flex-direction:column;gap:6px}
+.sb{width:54px;height:50px;background:#fff;border:3px solid #111;font:inherit;font-size:13px}
+#tabs{display:flex;background:#e3e3e3;border-top:3px solid #111}#tabs button{flex:1;padding:14px 0;font:inherit;font-size:19px;background:none;border:0}
+#tabs button:active{background:#ccc}
+.bx{background:var(--gr);border:4px solid #111;border-radius:8px;padding:8px 12px;font-size:17px;width:calc(100% - 66px)}
+#stage{flex:1;position:relative}#row{position:absolute;left:0;right:0;bottom:0;display:flex}
+.cell{flex:1;position:relative;padding:0 2px}
+.ic{position:relative;width:100%;aspect-ratio:1;border-radius:50%;background:hsl(var(--h),70%,78%);border:4px solid;display:grid;place-items:center;font-size:30px;overflow:visible}
+.ic img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.ic em{position:absolute;top:-4px;right:-4px;font-size:11px;font-style:normal;background:#fff;border:2px solid #111;border-radius:8px;padding:0 4px}
+.sil{background:#111!important}.sil b,.sil img{filter:brightness(0)}
+#log{background:#b5675a;border-top:4px solid #111;color:#fff;margin:0 -8px -8px;padding:8px 12px;height:24%;font-size:14px;overflow:hidden}
+.ar{display:flex;align-items:center;gap:4px}.ar button{width:40px;height:100px;border:3px solid #111;background:#fff;font:inherit;font-size:22px}
+.big{width:min(62vw,280px);margin:auto}.big .ic{font-size:70px}
+.pn{background:#fff;border:3px solid #111;margin:8px -8px 0;padding:8px 12px;font-size:15px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;border-bottom:2px solid #111;padding-bottom:6px}
+.gl{font-size:13px}.g{height:10px;background:#ddd;border:2px solid #111;border-radius:6px;overflow:hidden}.g i{display:block;height:100%;background:#4c8}
+.ef{margin-top:6px;font-size:14px}
+.btn{font:inherit;font-size:16px;padding:9px 16px;border:3px solid #111;background:#fff;border-radius:10px;margin:4px}
+.slots{display:flex;gap:6px;margin-top:16px;text-align:center;font-size:14px}.slots>div{flex:1}
+.egg{width:100%;aspect-ratio:1;border-radius:50%;border:6px solid #aaa;background:#fff;display:grid;place-items:center;font-size:12px;overflow:hidden;position:relative}.egg .ic{width:90%}
+.shop{background:#e3e3e3;border-top:3px solid #111;margin:auto -8px -8px;padding:8px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;font-size:12px}
+.shop .egg{border:4px solid #fff;border-radius:50%;aspect-ratio:1;align-items:end;padding-bottom:6px}.dim{opacity:.45}
+.ov{position:absolute;inset:0;background:rgba(0,0,0,.6);display:none;z-index:20;align-items:center;justify-content:center}.ov.on{display:flex}
+.box{background:#fff;border-radius:14px;padding:14px;width:94%;max-height:90%;overflow:auto;font-size:15px}.box.dk{background:#364337;color:#fff;text-align:center}
+.box h1{font-size:54px;margin-bottom:6px}.box h3{margin:10px 0 4px}.dk .pn{background:none;border-color:#fff;color:#fff;margin:8px 0}.dk .two{border-color:#fff}.dk .g{border-color:#fff}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.grid .ic{font-size:20px;border-width:3px}
+.rw{display:flex;justify-content:space-between;align-items:center;margin:4px 0}textarea{width:100%;height:60px;font-size:11px}
+#toast{position:absolute;left:10px;right:10px;bottom:90px;background:#000c;color:#fff;border-radius:10px;padding:8px;text-align:center;z-index:60;display:none;font-size:14px}
+:root{--ink:#3b2a22;--cream:#fbf5ea;--latte:#ead9c3;--cocoa:#6b4a3a;--sage:#a9c3a4;--rose:#e59c93}
+html,body{background:#2b2019}#app{background:var(--latte)}
+#top{background:url(syoji_background.png) center/cover,var(--cocoa);color:var(--cream);padding:8px 12px;font-size:16px;text-shadow:0 1px 2px #0006}
+#s0{background:url(cafe_background.png) center/cover,linear-gradient(#f6ead7,#e6cfb0)}
+#s1{background:url(petkanri_background.png) center/cover,linear-gradient(#f3eadb,#dfe8d6);overflow-y:auto}
+#s2{background:url(eggkanri_background.png) center/cover,linear-gradient(#f4ead9,#e9d3d0);overflow-y:auto}
+#s1>*,#s2>*{flex-shrink:0}
+#side .sb{width:56px;height:56px;background:none;border:0;padding:0}.sb img{width:100%;height:100%;object-fit:contain}
+.fb{display:grid;place-items:center;width:100%;height:100%;background:var(--cream);border:2px solid var(--cocoa);border-radius:14px;color:var(--cocoa);font-size:13px}
+#tabs{background:url(menu_background.png) center/cover,var(--cocoa);border:0;height:76px}
+#tabs button{height:100%;padding:4px 0;color:var(--cream);font-size:18px}#tabs img{height:100%;max-width:100%;object-fit:contain}#tabs button:active{background:#fff3}
+.bx{background:var(--cocoa);color:var(--cream);border:0;border-radius:14px;box-shadow:0 2px 0 #0003}
+#log{background:url(countar_background.png) center/cover,#8a5d4b;border:0;color:var(--cream)}
+.ic{border:0!important;background:none!important;border-radius:0}.sil{background:none!important}
+.ic b{font-size:min(9vw,44px);color:hsl(var(--h),45%,40%);text-shadow:0 2px 0 #fff8}.sil b{color:#222}.big .ic b{font-size:90px}.grid .ic b{font-size:26px}
+.ic em{display:none}.grid .ic em{display:block;border:0;background:var(--cocoa);color:var(--cream);border-radius:6px;font-size:10px}
+.btn{border:2px solid var(--cocoa);background:var(--cream);color:var(--cocoa);box-shadow:0 3px 0 var(--cocoa)}.btn.pri{background:var(--rose);color:#fff;border-color:#b86f67;box-shadow:0 3px 0 #b86f67}
+.pn{background:var(--cream);border:0;border-radius:14px;margin:8px 0;box-shadow:0 2px 0 #0002}.two{border-color:var(--latte)}.g{border:0;background:var(--latte)}.g i{background:var(--sage)}
+.box{background:var(--cream)}.ar button{border:0;background:#fffb;border-radius:12px;color:var(--cocoa)}
+.eg{width:100%;aspect-ratio:1;display:grid;place-items:center;position:relative}.eg img{width:100%;height:100%;object-fit:contain}.em2{font-size:54px}.eg .ic{width:100%}
+.ttl{text-align:center;font-size:20px;margin-top:60px;color:var(--cocoa)}.tm{font-size:13px;color:var(--cocoa);margin-bottom:4px}
+.shop{background:none;border:0;margin:16px 0 8px;padding:0;grid-template-columns:repeat(2,1fr);gap:12px}.shop>div{background:#fffa;border-radius:16px;padding:10px;text-align:center;font-size:14px}.shop .eg{width:60%;margin:auto}.pr{font-size:12px;color:var(--cocoa)}.bb{display:inline-block;margin-top:4px;background:var(--rose);color:#fff;border-radius:10px;padding:3px 16px}
+.hd{display:flex;justify-content:space-between;align-items:center;font-size:16px;color:var(--cocoa);padding-right:64px;min-height:56px}.hd .btn{margin:0}
+.g4{grid-template-columns:repeat(4,1fr);margin-top:64px}.it{position:relative;text-align:center}.pl{position:absolute;left:0;right:0;bottom:-2px;font-style:normal;font-size:11px;background:var(--rose);color:#fff;border-radius:8px}
+.acq{text-align:center}.acqt{font-size:40px;color:var(--rose)}.acqn{font-size:22px;margin-top:6px}.rb{display:inline-block;color:#fff;border-radius:10px;padding:1px 14px;margin:4px 0}.bts{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.ic b{display:none}.ic.nf b{display:block}#s1.on{display:block}#s1 .ar{margin:12px 0!important}.st i{background:var(--rose)}.warn{background:#fde3df;color:#a2392e;border-radius:10px;padding:8px;font-size:13px;margin:4px 0}
+#stage{z-index:2}#row{bottom:-6px}.cell{padding:0}
+.box .big{width:clamp(90px,calc(100dvh - 470px),240px)}.acqt{font-size:32px}.bts{flex-direction:row}.bts .btn{flex:1;margin:0}.box .pn{margin:6px 0}
+#s1 .dv{height:100%;display:flex;flex-direction:column;overflow:hidden}#s1 .dv .ar{flex:1;min-height:0;margin:4px 0!important}.dv .ar button{height:70px}
+.dv .big{flex:1;height:100%;min-height:0;width:auto;display:flex;align-items:center;justify-content:center}.dv .big .ic{height:100%;width:auto;aspect-ratio:1;max-width:100%}
+.g4{margin-top:124px}.ttl{margin-top:130px}#s1 .dv .ar{margin-right:62px!important}
+.it,.tl{position:relative}.it{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:pan-y}
+.sv{position:absolute;right:0;top:15px;font-size:9px;line-height:1.25;text-align:right;color:var(--cocoa);background:#fffc;border-radius:5px;padding:0 3px}
+.pg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.pnl{position:relative;aspect-ratio:1;background:#fffc;border:2px solid var(--cocoa);border-radius:12px;padding:6px;font-size:12px;display:flex;flex-direction:column;justify-content:center;text-align:center}.pnl.ok{background:var(--sage)}.pnl small{position:absolute;top:3px;left:6px}.pnl i{position:absolute;right:4px;bottom:0;font-style:normal;font-size:24px;color:#2a7a4a}
+.box.pm{background:url(petkanri_background.png) center/cover,var(--cream)}.tk{height:28px;vertical-align:middle;margin-right:4px}
+
+/* ================= 演出（明るめ・ポップ） ================= */
+.ol{text-shadow:2px 0 var(--o),-2px 0 var(--o),0 2px var(--o),0 -2px var(--o),1.5px 1.5px var(--o),-1.5px 1.5px var(--o),1.5px -1.5px var(--o),-1.5px -1.5px var(--o),0 4px 0 var(--o)}
+.fe{display:block;line-height:1;text-align:center}
+.st4{position:absolute;width:var(--s,14px);height:var(--s,14px);margin:calc(var(--s,14px)/-2) 0 0 calc(var(--s,14px)/-2);background:var(--c,#ffd23f);clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);pointer-events:none;animation:tw .75s var(--d,0s) ease-out both}
+@keyframes tw{0%{transform:scale(0) rotate(0);opacity:0}35%{transform:scale(1.25) rotate(70deg);opacity:1}100%{transform:scale(0) rotate(200deg);opacity:0}}
+.bw0{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:3}
+.cbp{position:absolute;left:var(--x0,50%);top:var(--y0,30%);width:var(--w,7px);height:calc(var(--w,7px)*1.5);background:var(--c,#ffd23f);border-radius:2px;pointer-events:none;animation:cb var(--t,.9s) var(--d,0s) cubic-bezier(.15,.7,.4,1) both}
+.cbp.cc{height:var(--w,7px);border-radius:50%}
+.cbp.cs{width:calc(var(--w,7px)*2);height:calc(var(--w,7px)*2);border-radius:0;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%)}
+@keyframes cb{0%{transform:translate(0,0) rotate(0) scale(.3);opacity:0}8%{opacity:1}40%{transform:translate(calc(var(--dx)*.85),var(--dy)) rotate(calc(var(--r)*.5)) scale(1.1);opacity:1;animation-timing-function:cubic-bezier(.5,0,.9,.6)}100%{transform:translate(var(--dx),calc(var(--dy) + var(--g,60px))) rotate(var(--r)) scale(.8);opacity:0}}
+.cfl{position:absolute;top:-16px;width:var(--w,7px);height:calc(var(--w,7px)*1.5);background:var(--c);border-radius:2px;animation:cf var(--t,2.6s) var(--d,0s) linear both}
+.cfl.cc{height:var(--w,7px);border-radius:50%}
+@keyframes cf{0%{transform:translate(0,0) rotate(0);opacity:1}80%{opacity:1}100%{transform:translate(var(--x),105vh) rotate(var(--r));opacity:0}}
+
+/* ジャンプ（つぶれて→伸びて→着地でむにゅっ） */
+.ic{transform-origin:50% 100%}
+.jp{animation:j .6s both}
+@keyframes j{
+0%{transform:translateY(0) scale(1,1);animation-timing-function:ease-out}
+10%{transform:translateY(0) scale(1.13,.85);animation-timing-function:cubic-bezier(.2,.7,.3,1)}
+45%{transform:translateY(-52px) scale(.93,1.1);animation-timing-function:cubic-bezier(.6,0,.9,.5)}
+86%{transform:translateY(0) scale(.97,1.05);animation-timing-function:ease-out}
+92%{transform:translateY(0) scale(1.17,.8);animation-timing-function:ease-out}
+100%{transform:translateY(0) scale(1,1)}}
+.sh{position:absolute;left:18%;right:18%;bottom:0;height:9%;background:rgba(110,70,50,.22);border-radius:50%;filter:blur(1.5px);z-index:-1;pointer-events:none}
+@keyframes sh{0%,100%{transform:scale(1);opacity:1}45%{transform:scale(.5);opacity:.4}}
+#fxl{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:4}
+
+/* 着地のぽふっ */
+.puf{position:absolute;left:0;right:0;bottom:0;height:0;pointer-events:none;z-index:1}
+.puf .pr{position:absolute;left:50%;bottom:4px;width:62%;height:14px;margin-left:-31%;border:3px solid #fff;border-radius:50%;box-shadow:0 0 8px #fff9;opacity:0;animation:pr .5s ease-out both}
+@keyframes pr{0%{transform:scale(.35,.35);opacity:.95}100%{transform:scale(1.7,1.25);opacity:0}}
+
+/* +コイン表示 */
+.pop{position:absolute;left:-34px;right:-34px;top:-10px;text-align:center;white-space:nowrap;pointer-events:none;z-index:4;font-size:19px;line-height:1.05;letter-spacing:.5px;animation:pp 1.15s both}
+.pop span{display:block}
+.pop .pc{color:#ffe84a;--o:#c2570c}
+.pop .pk{color:#b8f6ff;font-size:14px;margin-top:1px;--o:#0b7a9e}
+.pop.bo{font-size:24px}
+.pop.bo .pc{color:#fff36b;--o:#ff2f7d}
+.pop.bo .pk{font-size:16px;--o:#7c3aed}
+@keyframes pp{0%{transform:translateY(12px) scale(.2) rotate(var(--rt,0deg));opacity:0;animation-timing-function:cubic-bezier(.3,1.6,.5,1)}
+14%{transform:translateY(-6px) scale(1.35) rotate(var(--rt,0deg));opacity:1;animation-timing-function:ease-out}
+28%{transform:translateY(-14px) scale(1) rotate(0deg);opacity:1}
+72%{opacity:1}
+100%{transform:translateY(-58px) scale(1);opacity:0}}
+
+/* コウモリ（bat.png）：右下→左上 */
+.bat{position:absolute;pointer-events:none;animation:bx var(--t) cubic-bezier(.45,0,.55,1) var(--d) both,bop var(--t) linear var(--d) both}
+.bat .by{animation:by var(--t) cubic-bezier(.2,.7,.45,1) var(--d) both}
+.bf{animation:flap .15s ease-in-out infinite alternate;filter:drop-shadow(0 3px 0 rgba(255,255,255,.8)) drop-shadow(0 0 9px rgba(255,150,60,.65))}
+.bf img{display:block;width:100%;height:auto}
+@keyframes bx{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+@keyframes by{from{transform:translateY(0)}to{transform:translateY(var(--dy))}}
+@keyframes bop{0%{opacity:0}12%{opacity:1}68%{opacity:1}100%{opacity:0}}
+@keyframes flap{from{transform:scaleY(1) rotate(-9deg)}to{transform:scaleY(.6) rotate(9deg)}}
+
+/* おばけ（ghosts.png）：左上→右下へ、薄くなりながら */
+.gho{position:absolute;pointer-events:none;width:var(--w);animation:gx var(--t) cubic-bezier(.35,.1,.5,1) var(--d) both}
+.gop{animation:gop var(--t) linear var(--d) both}
+.gw{opacity:var(--o,1);animation:gw 1s ease-in-out infinite alternate}
+.gw img{display:block;width:100%;height:auto;filter:drop-shadow(0 0 6px #fff) drop-shadow(0 5px 14px rgba(170,130,255,.65))}
+@keyframes gx{from{transform:translate(0,0) scale(.82)}to{transform:translate(var(--dx),var(--dy)) scale(1.2)}}
+@keyframes gop{0%{opacity:0}10%{opacity:.96}100%{opacity:0}}
+@keyframes gw{from{transform:translateX(-14px) rotate(-6deg)}to{transform:translateX(14px) rotate(6deg)}}
+
+/* かぼちゃ */
+.pmk{position:absolute;left:var(--x0);top:var(--y0);margin:-18px 0 0 -18px;font-size:36px;line-height:1;pointer-events:none;filter:drop-shadow(0 3px 0 rgba(255,255,255,.7));animation:cb var(--t,1.1s) var(--d,0s) cubic-bezier(.15,.7,.4,1) both}
+
+/* プレゼントボックス（presentbox.png） */
+.pres{position:absolute;left:0;top:0;width:100%;aspect-ratio:1;pointer-events:none;z-index:3}
+.pbx{position:absolute;left:50%;top:-34%;width:80%;margin-left:-40%;transform-origin:50% 100%;animation:pbx 1.25s both}
+.pbx img{display:block;width:100%;height:auto;filter:drop-shadow(0 0 7px rgba(255,255,255,.95)) drop-shadow(0 3px 0 rgba(255,255,255,.7))}
+.pbx .fe{font-size:46px}
+@keyframes pbx{
+0%{transform:translateY(-130%) scale(.5) rotate(-18deg);opacity:0;animation-timing-function:cubic-bezier(.5,0,.9,.6)}
+22%{transform:translateY(0) scale(1.18,.84) rotate(0);opacity:1;animation-timing-function:cubic-bezier(.2,.9,.3,1)}
+34%{transform:translateY(-14%) scale(.92,1.12) rotate(4deg);animation-timing-function:ease-in-out}
+44%{transform:translateY(-6%) scale(1.3) rotate(-7deg);opacity:1;animation-timing-function:ease-in-out}
+66%{transform:translateY(-34%) scale(1.3) rotate(6deg);opacity:1;animation-timing-function:ease-in}
+100%{transform:translateY(-95%) scale(1.55) rotate(0);opacity:0}}
+.pres .ring{position:absolute;left:50%;top:14%;width:22px;height:22px;margin:-11px;border-radius:50%;border:4px solid #ffe14d;box-shadow:0 0 10px #fff8;opacity:0;animation:rg .6s .4s ease-out both}
+@keyframes rg{0%{transform:scale(.3);opacity:1}100%{transform:scale(5.5);opacity:0}}
+
+/* 獲得画面 */
+.ov{transition:none}
+#ov[data-k=acqx]{background:radial-gradient(circle at 50% 38%,rgba(255,244,205,.8),rgba(255,170,208,.6) 58%,rgba(120,85,170,.6))}
+.ov.on .box{animation:boxin .38s cubic-bezier(.3,1.5,.5,1)}
+@keyframes boxin{from{transform:scale(.72);opacity:0}to{transform:scale(1);opacity:1}}
+.box.acqx{background:linear-gradient(#fff9dc,#ffe6f1 52%,#e0f5ff);border:4px solid #fff;box-shadow:0 0 0 4px var(--rose),0 14px 30px rgba(0,0,0,.35);overflow-x:hidden}
+.acq.get{position:relative;overflow:hidden;border-radius:10px}
+.acq.get::after{content:'';position:absolute;inset:0;background:#fff;pointer-events:none;animation:fl .7s forwards;z-index:5}
+@keyframes fl{from{opacity:.95}to{opacity:0}}
+.get .acqt{font-size:36px;line-height:1.2;color:#ff6fa5;--o:#fff;position:relative;z-index:2;letter-spacing:2px}
+.get .acqt span{display:inline-block;--o:#fff;text-shadow:2px 0 #fff,-2px 0 #fff,0 2px #fff,0 -2px #fff,1.5px 1.5px #fff,-1.5px 1.5px #fff,1.5px -1.5px #fff,-1.5px -1.5px #fff,0 4px 0 #f0a0c0;animation:lt .7s calc(var(--k)*.09s + .12s) cubic-bezier(.3,1.7,.5,1) both,lb 1.4s calc(var(--k)*.12s + 1s) ease-in-out infinite}
+.get .acqt span:nth-child(2){color:#ff9a3c}.get .acqt span:nth-child(3){color:#38b6ff}
+@keyframes lt{0%{transform:translateY(-60px) scale(.2) rotate(-40deg);opacity:0}100%{transform:translateY(0) scale(1) rotate(0);opacity:1}}
+@keyframes lb{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.stg{position:relative;display:flex;justify-content:center;padding:6px 0}
+.rays{position:absolute;left:50%;top:50%;width:640px;height:640px;border-radius:50%;opacity:.7;background:repeating-conic-gradient(var(--rb) 0 9deg,rgba(255,255,255,0) 9deg 22.5deg);-webkit-mask-image:radial-gradient(circle,#000 6%,transparent 66%);mask-image:radial-gradient(circle,#000 6%,transparent 66%);transform:translate(-50%,-50%);animation:spin 16s linear infinite}
+@keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+.halo{position:absolute;left:50%;top:50%;width:min(86%,330px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,#fff 0,rgba(255,255,255,.88) 38%,rgba(255,255,255,0) 70%);transform:translate(-50%,-50%);animation:hal 1.5s ease-in-out infinite alternate}
+@keyframes hal{from{transform:translate(-50%,-50%) scale(.88)}to{transform:translate(-50%,-50%) scale(1.1)}}
+.sp{animation:tw 1.5s var(--d,0s) ease-out infinite}
+.bw{position:relative;z-index:1;width:fit-content;margin:0 auto}
+.get .big{animation:chin .75s .12s cubic-bezier(.2,1.5,.4,1) both}
+.get .big .ic img{filter:drop-shadow(0 6px 0 rgba(255,255,255,.65)) drop-shadow(0 0 10px rgba(255,255,255,.9))}
+@keyframes chin{0%{transform:scale(0) rotate(-32deg)}60%{transform:scale(1.18) rotate(6deg)}100%{transform:scale(1) rotate(0)}}
+.new{position:absolute;left:-14%;top:-5%;z-index:3;font-size:21px;line-height:1;padding:7px 13px 6px;color:#fff;background:linear-gradient(#ff7fa0,#ff2f6d);border:3px solid #fff;border-radius:999px;box-shadow:0 4px 0 #c01a52,0 7px 14px rgba(0,0,0,.28);--o:#c01a52;transform:rotate(-12deg);animation:stamp .6s .6s cubic-bezier(.3,1.7,.5,1) both,npl 1.1s 1.3s ease-in-out infinite}
+.new::after{content:'';position:absolute;right:-12px;top:-16px;width:22px;height:22px;background:#ffe14d;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);animation:tw 1.2s 1.2s ease-out infinite}
+@keyframes stamp{0%{transform:scale(3.4) rotate(-45deg);opacity:0}55%{opacity:1}100%{transform:scale(1) rotate(-12deg);opacity:1}}
+@keyframes npl{50%{transform:scale(1.13) rotate(-8deg)}}
+.get .acqn,.get .rb{animation:up .5s .75s cubic-bezier(.3,1.5,.5,1) both}
+.get .rb{position:relative;overflow:hidden;text-shadow:0 1px 0 #0003;box-shadow:0 3px 0 #0002}
+.get .rb::after{content:'';position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.85),transparent);animation:shn 1.8s 1.3s infinite}
+@keyframes shn{to{left:140%}}
+.get .pn,.get .bts{animation:up .5s .95s cubic-bezier(.3,1.3,.5,1) both}
+@keyframes up{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
+.get .pn,.get .bts,.get .acqn,.get .rb{position:relative;z-index:2}
+
+/* 待機中のゆらゆら */
+.big .ic img{animation:bob 2.4s ease-in-out infinite;transform-origin:50% 100%}
+@keyframes bob{0%,100%{transform:translateY(0) scale(1,1)}50%{transform:translateY(-4px) scale(.98,1.03)}}
+.slots [data-r="0"] .eg img,.slots [data-r="0"] .eg .em2{animation:wob 2.4s ease-in-out infinite;transform-origin:50% 90%}
+.slots [data-r="1"] .eg{animation:rdy .9s ease-in-out infinite;transform-origin:50% 100%}
+.slots [data-r="1"] .tm{color:#ff5d8f;font-size:15px;animation:tmp .9s ease-in-out infinite}
+.slots [data-r="1"] .eg::before,.slots [data-r="1"] .eg::after{content:'';position:absolute;width:20px;height:20px;background:#ffd23f;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);animation:tw 1.2s infinite;z-index:2}
+.slots [data-r="1"] .eg::before{right:-2px;top:-4px}
+.slots [data-r="1"] .eg::after{left:-2px;top:30%;background:#ff8fb1;animation-delay:.5s}
+@keyframes wob{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+@keyframes rdy{0%,100%{transform:translateY(0) scale(1,1)}40%{transform:translateY(-9px) scale(.96,1.07)}70%{transform:translateY(0) scale(1.07,.93)}}
+@keyframes tmp{50%{transform:scale(1.15)}}
+.shop>div{transition:transform .12s}.shop>div:active{transform:scale(.94)}
+.shop>div:not(.dim) .eg img{animation:wob 3s ease-in-out infinite;transform-origin:50% 90%}
+.shop>div:nth-child(2n):not(.dim) .eg img{animation-delay:-1.2s}
+
+/* 画面切り替え・ボタン・トースト */
+.scr.on{animation:scin .28s ease-out}
+@keyframes scin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.btn{transition:transform .08s,box-shadow .08s}.btn:active{transform:translateY(3px);box-shadow:0 0 0 var(--cocoa)}.btn.pri:active{box-shadow:0 0 0 #b86f67}
+#tabs button{transition:transform .1s}#tabs button:active{transform:scale(.9)}
+#side .sb{transition:transform .1s}#side .sb:active{transform:scale(.88)}
+#bagb{position:relative}
+.bump{animation:bump .55s cubic-bezier(.3,1.6,.5,1)}
+@keyframes bump{0%{transform:scale(1)}30%{transform:scale(1.35) rotate(-10deg)}60%{transform:scale(.9) rotate(6deg)}100%{transform:scale(1)}}
+.fly{position:fixed;left:50%;top:40%;margin:-50px;width:100px;z-index:40;pointer-events:none;transition:transform .8s cubic-bezier(.6,-.28,.74,.05),opacity .8s ease-in;filter:drop-shadow(0 0 8px #fff)}
+#toast{background:linear-gradient(#ffb7aa,#f48b7f);color:#fff;font-size:14px;border:3px solid #fff;border-radius:16px;box-shadow:0 4px 0 #d9695d,0 8px 16px #0003;text-shadow:0 1px 0 #0003;animation:tin .35s cubic-bezier(.3,1.7,.5,1)}
+@keyframes tin{from{transform:translateY(24px) scale(.8);opacity:0}to{transform:none;opacity:1}}
+
+/* ロード画面 */
+#ld{background:linear-gradient(160deg,#ffe3ef,#fff3c9 55%,#d9f4ff);flex-direction:column;gap:18px}
+.ldt{display:flex;gap:3px;font-size:32px;color:#ff7aa2}
+.ldt span{display:inline-block;--o:#fff;text-shadow:2px 0 #fff,-2px 0 #fff,0 2px #fff,0 -2px #fff,1.5px 1.5px #fff,-1.5px 1.5px #fff,1.5px -1.5px #fff,-1.5px -1.5px #fff,0 4px 0 #f0a0c0;animation:ldb .9s calc(var(--k)*.09s) ease-in-out infinite}
+.ldt span:nth-child(3n+2){color:#ff9a3c}.ldt span:nth-child(3n){color:#38b6ff}
+.ldd{display:flex;gap:10px}.ldd i{width:14px;height:14px;border-radius:50%;background:#ff7aa2;box-shadow:0 3px 0 #d9507c;animation:ldb .8s ease-in-out infinite}
+.ldd i:nth-child(2){background:#ffc83d;box-shadow:0 3px 0 #d99a0a;animation-delay:.12s}.ldd i:nth-child(3){background:#5ac8fa;box-shadow:0 3px 0 #2a8fc4;animation-delay:.24s}
+@keyframes ldb{0%,100%{transform:translateY(0) scale(1,1)}40%{transform:translateY(-14px) scale(.95,1.08)}70%{transform:translateY(0) scale(1.1,.9)}}
+
+@media (prefers-reduced-motion:reduce){.big .ic img,.slots [data-r] .eg,.slots [data-r] .eg img,.shop .eg img,.rays,.halo,.new,.get .acqt span,.sp{animation:none!important}}
+
+/* ===== v2: UI調整 ===== */
+#top{font-size:14px;padding:6px 12px}
+.bx{font-size:15px;padding:6px 12px;width:calc(100% - 56px)}
+#side{gap:5px}#side .sb{width:46px;height:46px}
+#log{font-size:12.5px}
+.btn{font-size:14px;padding:8px 14px}
+.box{font-size:13.5px}.pn{font-size:13px}.gl{font-size:12px}.ef{font-size:12.5px}
+.acqn{font-size:19px}.get .acqt{font-size:32px}.acqt{font-size:28px}
+#tabs button{font-size:16px}
+.hd{font-size:14px;padding-right:56px;min-height:48px}
+.ttl{font-size:18px;margin-top:112px}.tm{font-size:12px}
+.slots{font-size:13px}.shop>div{font-size:13px}.pr{font-size:11px}
+.g4{margin-top:46px}
+.rw{font-size:13.5px}.box h3{font-size:14px}.warn{font-size:12px}
+#toast{font-size:13px}
+.pop{font-size:17px}.pop.bo{font-size:21px}
+.cell{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:manipulation}
+.big>img{display:block;width:100%;height:auto;object-fit:contain}
+.dv .hd{min-height:100px;align-items:flex-start}
+#s1 .dv .ar{margin-right:0!important}
+.qrow{position:relative;margin:6px 0}
+.qd summary{min-height:34px;padding-right:130px;line-height:34px;cursor:pointer}
+.qd .qb{font-size:12.5px;line-height:1.7;background:var(--cream);border-radius:10px;padding:8px 10px;margin-top:4px}
+.qrow>.tgb{position:absolute;right:0;top:0;margin:0}
+.tgb{min-width:64px}
+.rw small{font-size:11px;color:var(--cocoa);font-weight:400}
+.tut{text-align:center}.tt{font-size:19px;color:var(--rose);margin-bottom:6px}
+.tb{text-align:left;font-size:13.5px;line-height:1.75;margin:8px 0}
+.td{display:flex;gap:6px;justify-content:center;margin:8px 0}.td i{width:8px;height:8px;border-radius:50%;background:var(--latte)}.td i.on{background:var(--rose);transform:scale(1.3)}
+.bts .btn{padding:8px 6px;font-size:13px}
+/* 軽量版 */
+.lite .jp{animation-name:jl!important}
+@keyframes jl{50%{transform:translateY(-46px)}}
+.lite .sh,.lite .scr.on,.lite .ov.on .box,.lite .big .ic img,.lite .rays,.lite .halo,.lite .sp,.lite .new,.lite .get .acqt span,.lite .get .big,.lite .get .acqn,.lite .get .rb,.lite .get .pn,.lite .get .bts,.lite .slots [data-r] .eg,.lite .slots [data-r] .eg img,.lite .shop .eg img,.lite #toast,.lite .bump,.lite .ldt span,.lite .ldd i,.lite .get .rb::after{animation:none!important}
+.lite .acq.get::after,.lite .slots [data-r="1"] .eg::before,.lite .slots [data-r="1"] .eg::after,.lite .new::after{display:none}
+.lite .pop{animation:ppl 1s both}
+@keyframes ppl{0%{opacity:1}100%{opacity:0;transform:translateY(-30px)}}
+
+/* ===== v3 ===== */
+.sm .pop{font-size:14px;letter-spacing:0}.sm .pop.bo{font-size:17px}.sm .pop .pk{font-size:11px}.sm .pop.bo .pk{font-size:13px}
+.fm{font-size:12.5px;line-height:1.75;text-align:left}.fm b{font-weight:700}
+#fxs{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:3}
+#log{position:relative;z-index:6}
+#sum{position:relative;z-index:6}
+.sf{position:absolute;top:-14px;left:var(--l);width:var(--w);height:var(--w);border-radius:50%;background:#fff;opacity:.92;box-shadow:0 0 5px #bfe6ff;animation:sf var(--t) linear forwards}
+@keyframes sf{to{transform:translate(var(--x),105vh)}}
+.lite #fxs{display:none}
+
+/* ===== 検証用モード ===== */
+#top{position:relative}#tmb{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:var(--rose);color:#fff;border-radius:8px;padding:2px 10px;font-size:12px;text-shadow:none}
+.tsh{padding-right:58px;min-height:104px}.tsh b{display:block;font-size:16px;color:var(--cocoa);margin-bottom:6px}
+.tsc{display:flex;flex-wrap:wrap;gap:4px}.tsc .btn{margin:0;padding:6px 8px;font-size:12px;box-shadow:0 2px 0 var(--cocoa)}
+.tsg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:8px 0}
+.tsg .it{position:relative;padding:3px 2px 4px;border-radius:12px;border:2px solid transparent}
+.tsg .it.sel{background:#fff;border-color:var(--rose)}
+.tsg .it.sel::after{content:'✔';position:absolute;top:2px;right:6px;color:#2a7a4a;font-size:16px}
+.tsg .ic b{font-size:26px}
+.tsg .nm{font-size:10.5px;line-height:1.25;text-align:center;color:var(--ink);word-break:break-all;margin-top:2px;min-height:26px}
+.tse{background:var(--cream);border-radius:14px;padding:8px 10px;margin:8px 0;box-shadow:0 2px 0 #0002}
+.tsr{display:flex;align-items:center;gap:8px}.tsr .tsn{flex:1;font-size:13px;line-height:1.3}
+.rbs{display:inline-block;color:#fff;border-radius:8px;padding:0 8px;font-size:11px}
+.mi{width:40px;flex:none}.mi .ic b{font-size:20px}
+.tsf{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px}
+.tsf label{font-size:11px;color:var(--cocoa);display:block}
+.tsf input{width:100%;font:inherit;font-size:14px;padding:5px 6px;border:2px solid var(--latte);border-radius:8px;background:#fff;color:var(--ink)}
+.tsf small{display:block;font-weight:400;font-size:9.5px;color:#8a735f;line-height:1.2}
+.stp{display:flex;align-items:center;gap:8px;margin-top:6px;font-size:12px;color:var(--cocoa)}
+.stp button{width:30px;height:30px;font:inherit;font-size:16px;border:2px solid var(--cocoa);border-radius:8px;background:#fff;color:var(--cocoa)}
+.tsb{position:sticky;bottom:-8px;margin:12px -8px -8px;padding:8px 10px;background:var(--cream);border-top:2px solid var(--latte);box-shadow:0 -4px 10px #0002;z-index:3}
+.sg{display:flex;gap:6px}.sg .btn{flex:1;margin:0;padding:8px 4px}
+.mx{display:flex;align-items:center;gap:8px}.mx input{flex:1}
+.mcp{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}.mcp .btn{margin:0;padding:4px 10px;font-size:12px}
+.mpl{display:flex;gap:6px}
+.rs-r{display:flex;align-items:center;gap:8px;margin:6px 0}.rs-r .bd{flex:1;min-width:0}.rs-r .v{text-align:right;font-size:13px;min-width:70px}
+.kv{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px dashed var(--latte);font-size:13px}.kv span:last-child{text-align:right}
+
+/* ===== v5: タップ阻害対策 / 軽量化レベル ===== */
+#toast,#fxl,#fxl *,#fxs,#fxs *,.pop,.pop *,.puf,.puf *,.bw0,.bw0 *,.pres,.pres *,.pmk,.pmk *,.bat,.bat *,.gho,.gho *,.st4,.cbp,.cfl,.sf,.fly,.fly *,.rays,.halo,.sp,.sh{pointer-events:none!important}
+#side{z-index:8}
+.lv2 .rays,.lv2 .halo,.lv2 .sp,.lv2 .new,.lv2 .new::after,.lv2 .get .rb::after,.lv2 .sh{animation:none!important}
+.lv5 .pop{display:none!important}
+.lvs{margin:2px 0 6px}.lvs small{display:block;font-weight:400;color:var(--cocoa);font-size:11.5px;margin-top:2px}
+
+/* ===== スマホ操作性の修正 ===== */
+html,body{touch-action:manipulation;-webkit-text-size-adjust:100%;overscroll-behavior:none}
+body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+input,textarea{-webkit-user-select:text;user-select:text}
+img{-webkit-user-drag:none;user-drag:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;pointer-events:none}
+button,.it,.cell,.egg,.shop>div{touch-action:manipulation}
+.it{touch-action:pan-y}
+/* 所持金額バー: 背景画像の上に暗い膜を重ね、文字のにじみ(ぼかし影)をやめてくっきり表示 */
+#top{background:linear-gradient(rgba(40,24,16,.55),rgba(40,24,16,.55)),url(syoji_background.png) center/cover,var(--cocoa);color:#fff;text-shadow:0 1px 0 #000a,1px 0 0 #000a,-1px 0 0 #000a,0 -1px 0 #000a;-webkit-font-smoothing:antialiased}
+</style></head><body><div id="app">
+<div id="top"></div>
+<div id="main"><section id="s2" class="scr"></section><section id="s0" class="scr on"><div class="bx" id="sum"></div><div id="stage"><div id="row"></div></div><div id="log"><b>特殊効果ログ</b><div id="lg"></div></div><div id="fxs"></div><div id="fxl"></div></section><section id="s1" class="scr"></section>
+<div id="side"><button class="sb" onclick="setm()"><img src="settings.png" alt="設定" onerror="this.outerHTML='<span class=fb>設定</span>'"></button><button class="sb" id="bagb" onclick="bag()"><img src="bag.png" alt="持ち物" onerror="this.outerHTML='<span class=fb>持ち物</span>'"></button><button class="sb" id="msnb" onclick="msn()"><img src="panelmission.png" alt="ミッション" onerror="this.outerHTML='<span class=fb>ミッ<br>ション</span>'"></button><button class="sb" id="meab" onclick="meaSetup()" style="display:none"><span class="fb">計測</span></button><button class="sb" id="cpb" onclick="cafeStop()" style="display:none"><span class="fb">カフェ<br>停止</span></button></div></div>
+<nav id="tabs"><button onclick="go(2)"><img src="egg_menu.png" alt="卵管理" onerror="this.outerHTML='卵管理'"></button><button onclick="go(0)"><img src="cafe_menu.png" alt="カフェ" onerror="this.outerHTML='カフェ'"></button><button onclick="go(1)"><img src="pet_menu.png" alt="ペット管理" onerror="this.outerHTML='ペット管理'"></button></nav>
+<div id="ov" class="ov"><div class="box" id="bx"></div></div><div id="ov2" class="ov" style="z-index:30"><div class="box" id="bx2"></div></div>
+<div id="ld" class="ov on" style="z-index:50"><div class="ldt"><span style="--k:0">ロ</span><span style="--k:1">ー</span><span style="--k:2">ド</span><span style="--k:3">中</span><span style="--k:4">…</span></div><div class="ldd"><i></i><i></i><i></i></div></div><div id="toast"></div></div>
+<script>
+const $=i=>document.getElementById(i),ri=(a,b)=>Math.floor(a+Math.random()*(b-a+1));
+let TM=0;try{TM=localStorage.getItem('pc_mode')=='test'}catch(e){}
+const SK=TM?'pc_save_t':'pc_save',BK=TM?'pc_bak_t':'pc_bak';let MEA=null,CP=0;
+const CAP=9999e12,MAXB=TM?500:200,ORD=['ER','LR','UR','SSR','SR','R'],RC={ER:'#e80',LR:'#e44',UR:'#a4e',SSR:'#ec2',SR:'#4ac',R:'#999'};
+const RG={ER:[[3e4,2e5],[300,1250]],LR:[[1e4,1e5],[250,1000]],UR:[[7500,25000],[100,250]],SSR:[[750,5000],[15,50]],SR:[[300,1000],[3,10]],R:[[10,500],[0,5]]};
+const N={ER:'コウモリちょこ,おばけぷりん,かぼちゃぱん',LR:'ちぷぱ,ぽてうさ,いちご,わたげ,すみれ,ちゃっぴー,はいうさぎ,チョコレートちょこ,プリンぷりん,食パンぱん,夢空 さっぴ,ちっぷ&れもん',UR:'クイーン みるく,キング ぱんぴー,ルーク ちょこ,ビショップ ぷりん,ナイト ぱん,ポーン くっきー,ふらわー,さっぴ,ひつ,ぺり,ぱんわ,きゃんでぃー',SSR:'ちょこ,ぷりん,ぱん,ゆきみ,ぺんた,せんちょー,かえで,ぱんれい,こぷく',SR:'ぴの,ちっぷ,れもん,はりん,くるみ,ボルト',R:'ひめ,くっきー,ぱんぴー,みるく,ぱんな'};
+const C=[];ORD.forEach(r=>N[r].split(',').forEach(n=>C.push({r,n,id:C.length})));
+const LE={ちぷぱ:['a',1.5],ぽてうさ:['e',1.5]};'いちご,わたげ,すみれ,ちゃっぴー,はいうさぎ'.split(',').map(n=>LE[n]=['e',1.1]);'チョコレートちょこ,プリンぷりん,食パンぱん,夢空 さっぴ,ちっぷ&れもん'.split(',').map(n=>LE[n]=['a',1.2]);
+const EF={コウモリちょこ:'着地時25%でコイン2倍',おばけぷりん:'着地時25%で集客コイン2倍',かぼちゃぱん:'所持しているだけで、着地時10%でコインと集客コイン2倍'};
+const E=[{n:'ふつうの卵',f:'normal_egg',h:1,p:{R:70,SR:30},c:'coin',v:500,sk:7,col:'#fff'},{n:'レアな卵',f:'rare_egg',h:2,p:{R:50,SR:50},c:'coin',v:1e5,sk:3,col:'#6cf'},{n:'スーパーレアな卵',f:'superrare_egg',h:3,p:{R:30,SR:40,SSR:30},c:'coin',v:1e7,col:'#267'},{n:'かがやく卵',f:'kagayaku_egg',h:6,p:{SR:30,SSR:30,UR:40},c:'cust',v:25e4,col:'#cb4'},{n:'伝説の卵',f:'legends_egg',h:12,p:{SSR:30,UR:50,LR:20},c:'cust',v:5e6,col:'#c54'},{n:'ハロウィンの卵',f:'halloween_egg',h:16,p:{ER:100},c:'cust',v:5e8,col:'#e80'}];
+const def=()=>({v:4,coin:0,cust:0,boxC:0,boxK:0,pets:[],uid:1,slots:[null,null,null],sk:[7,3],seen:{},hc:[0,0,0,0,0,0,0],gs:0,gu:0,mr:0,tk:[0,0],xt:0,last:Date.now()});
+let S,cur=0,pi=0,LG=[],cheatMsg='';
+let CFG=null;try{CFG=JSON.parse(localStorage.getItem('pc_cfg'))}catch(e){}
+CFG=Object.assign({quick:1,se:1,bgm:1,lite:0,sm:1,md:1,mo:0,mx:10,ap:1,tut:localStorage.getItem('pc_save')?1:0},CFG||{});
+const scfg=()=>{try{localStorage.setItem('pc_cfg',JSON.stringify(CFG))}catch(e){}};scfg();
+document.getElementById('app').classList.toggle('lite',!!CFG.lite);document.getElementById('app').classList.toggle('sm',!!CFG.sm);
+if(CFG.lv==null)CFG.lv=CFG.lite?3:1;applyLv();
+function F(n){n=Math.floor(n);if(n<1e4)return''+n;let s='';for(const[k,d]of[['兆',1e12],['億',1e8],['万',1e4]]){const q=Math.floor(n/d);n-=q*d;if(q||s)s+=q+k}return s+(n||'')}
+const F2=n=>F(n>=1e4?Math.floor(n/1e4)*1e4:n);
+function toast(t,ms=2200){const e=$('toast');e.textContent=t;e.style.display='block';e.style.animation='none';void e.offsetWidth;e.style.animation='';clearTimeout(e.t);e.t=setTimeout(()=>e.style.display='none',ms)}
+function mig(d){const s=Object.assign(def(),d);['coin','cust','boxC','boxK','uid','last'].forEach(k=>s[k]=+s[k]||0);s.uid=s.uid||1;
+ s.pets=(s.pets||[]).filter(p=>p&&C[p.c]).map(p=>{p=Object.assign({u:0,e:10,a:0,pl:false},p);delete p.g;delete p.lk;p.e=+p.e||10;p.a=+p.a||0;p.sp=Math.min(1,Math.max(.33,+p.sp||1));return p});
+ s.slots=[0,1,2].map(i=>{const x=s.slots&&s.slots[i];return x&&E[x.t]&&x.pet&&C[x.pet.c]?x:null});s.sk=[+(s.sk&&s.sk[0])||0,+(s.sk&&s.sk[1])||0];s.seen=s.seen||{};s.hc=[0,1,2,3,4,5,6].map(i=>+(s.hc&&s.hc[i])||0);s.tk=[0,1].map(i=>+(s.tk&&s.tk[i])||0);s.gs=+s.gs||0;s.gu=+s.gu||0;s.mr=+s.mr||0;s.xt=+s.xt||0;s.v=4;return s}
+function load(){if(TM){try{localStorage.removeItem('pc_save_t');localStorage.removeItem('pc_bak_t')}catch(e){}return def()}for(const k of[SK,BK])try{const d=JSON.parse(localStorage.getItem(k));if(d&&Array.isArray(d.pets))return mig(d)}catch(e){}return def()}
+function save(){if(TM)return;try{S.last=Date.now();const o=localStorage.getItem(SK);if(o)localStorage.setItem(BK,o);localStorage.setItem(SK,JSON.stringify(S))}catch(e){}}
+function add(k,v){S[k]+=v;if(S[k]>CAP){S[k=='coin'?'boxC':'boxK']+=S[k]-CAP;S[k]=CAP}}
+const placed=()=>S.pets.filter(p=>p.pl),P=u=>S.pets.find(p=>p.u==u),urb=()=>new Set(S.pets.filter(p=>C[p.c].r=='UR').map(p=>p.c)).size;
+const srt=()=>[...S.pets].sort((a,b)=>(b.pl?1:0)-(a.pl?1:0)||ORD.indexOf(C[a.c].r)-ORD.indexOf(C[b.c].r)||b.e-a.e||b.a-a.a);
+function mk(c){const g=RG[c.r];return{u:0,c:c.id,e:ri(...g[0]),a:ri(...g[1]),pl:false,lk:0}}
+function roll(t){let r=Math.random()*100,k;for(k in E[t].p){if((r-=E[t].p[k])<0)break}const L=C.filter(c=>c.r==k);return mk(L[ri(0,L.length-1)])}
+function give(p){p.u=S.uid++;S.pets.push(p);S.seen[p.c]=1;return p}
+function mults(pl){let e=1,a=1;pl.forEach(p=>{const l=LE[C[p.c].n];if(l){if(l[0]=='e')e*=l[1];else a*=l[1]}});return[e,a]}
+const eff=c=>EF[c.n]||(c.r=='UR'?'所持で全卵の孵化時間-5分(同名は重複しない)':LE[c.n]?`配置時、${LE[c.n][0]=='e'?'稼ぎ力':'集客力'}${LE[c.n][1]}倍`+'':'なし');
+const ic=(c,sz)=>`<div class="ic ${sz||''}" style="--h:${c.id*37%360};border-color:${RC[c.r]}"><b>${c.n[0]}</b><img src="${c.n}.png" onerror="this.parentNode.classList.add('nf');this.remove()"><em>${c.r}</em></div>`;
+const icS=c=>S.seen[c.id]?ic(c):`<div class="ic sil" style="--h:0"><img src="${c.n}.png" onerror="this.remove()"><em>${c.r}</em></div>`;
+
+const inf=p=>{const c=C[p.c];return`<div class="two"><div><div>${c.n} <span style="color:${RC[c.r]}">${c.r}</span></div><div class="gl">稼ぎ ${F(p.e)}/回<div class="g st"><i style="width:${Math.min(100,p.e/2000)}%"></i></div></div><div class="gl">集客 ${F(p.a)}/回<div class="g st"><i style="width:${Math.min(100,p.a/12.5)}%"></i></div></div><div class="gl">速度 ${spd(p).toFixed(2)}秒/回</div></div><div class="ef">特殊効果：${eff(c)}</div>`};
+
+function lgr(){const w=placed().find(p=>C[p.c].n=='イチゴツリー わたげ');const f=w?[`イチゴツリー わたげ【雪降り】${snowOn()?'発動中！残り'+Math.max(0,Math.ceil((w.sn-Date.now())/1000))+'秒 ':''}(${(w.ld||0)%1000}/1000)`]:[];$('lg').innerHTML=f.concat(LG.slice(0,w?3:4)).map(x=>`<div>${x}</div>`).join('')}
+function log(t){LG.unshift(t);LG.length=Math.min(LG.length,4);lgr()}
+/* ================= 演出 ================= */
+const PAL=['#ff5a8a','#ffd23f','#4cd6ff','#7be26b','#b57bff','#ff9a3c'],ORP=['#ff9a3c','#ffd23f','#ffb347','#ff6fa5','#b57bff'],XPAL=['#ff4d6d','#2fcf6b','#ffd23f','#ff8fd8','#4cd6ff','#ffffff'];
+const RB={R:'#ffd6a5',SR:'#9fdcff',SSR:'#ffe14d',UR:'#d3a6ff',LR:'#ff9a9a',ER:'#ffb347'},NB={R:14,SR:20,SSR:30,UR:40,LR:50,ER:60};
+const pk=a=>a[Math.floor(Math.random()*a.length)],SHP=['','cc','cs'];
+const lay=()=>cur==0&&!document.hidden&&!CFG.lite?$('fxl'):null;
+function addLay(L,h,ms){const w=document.createElement('div');w.className='bw0';w.innerHTML=h;L.append(w);setTimeout(()=>w.remove(),ms);return w}
+function star(x,y,s,d){return`<i class="st4" style="left:${x.toFixed(0)}px;top:${y.toFixed(0)}px;--s:${s}px;--c:${pk(PAL)};--d:${d.toFixed(2)}s"></i>`}
+function bursts(n,o){n=CFG.lv==2?Math.ceil(n/2):n;o=o||{};const x=o.x||'50%',y=o.y||'50%',pal=o.pal||PAL;let h='';
+ for(let k=0;k<n;k++){const a=o.a!=null?o.a+(Math.random()-.5)*(o.sp||6.28):Math.random()*6.28,dist=ri(o.d0||50,o.d1||120);
+  h+=`<i class="cbp ${pk(SHP)}" style="--x0:${x};--y0:${y};--c:${pk(pal)};--dx:${(Math.cos(a)*dist).toFixed(0)}px;--dy:${(Math.sin(a)*dist).toFixed(0)}px;--g:${o.g||60}px;--r:${ri(-540,540)}deg;--w:${ri(6,10)}px;--t:${(.8+Math.random()*.5).toFixed(2)}s;--d:${((o.dl||0)+Math.random()*.08).toFixed(2)}s"></i>`}
+ return h}
+function falls(n){let h='';for(let k=0;k<n;k++)h+=`<i class="cfl ${Math.random()<.35?'cc':''}" style="left:${ri(0,100)}%;--c:${pk(PAL)};--w:${ri(6,10)}px;--x:${ri(-50,50)}px;--r:${ri(300,900)}deg;--t:${(2+Math.random()*1.8).toFixed(2)}s;--d:${(.2+Math.random()*1.3).toFixed(2)}s"></i>`;return h}
+function org(i,L){const c=$('c'+i);if(!c)return null;const r=c.getBoundingClientRect(),l=L.getBoundingClientRect();return{x:r.left-l.left+r.width/2,y:r.top-l.top+r.height*.35}}
+
+/* 着地のぽふっ */
+function puff(i){if(cur!=0||document.hidden||CFG.lite||CFG.lv==2)return;const el=$('c'+i);if(!el)return;const d=document.createElement('div');d.className='puf';let h='<i class="pr"></i>';
+ for(let k=0;k<6;k++){const sd=k<3?-1:1;h+=`<i class="cbp cc" style="--x0:50%;--y0:-6px;--c:${pk(PAL)};--dx:${sd*ri(14,38)}px;--dy:${-ri(6,26)}px;--g:14px;--r:0deg;--w:${ri(5,8)}px;--t:.5s"></i>`}
+ d.innerHTML=h;el.append(d);setTimeout(()=>d.remove(),700)}
+/* +コイン表示 */
+function pop(i,e,a,bo){if(cur!=0||document.hidden||CFG.lv>=5)return;const el=$('c'+i);if(!el)return;const d=document.createElement('div');d.className='pop'+(bo?' bo':'');d.style.setProperty('--rt',ri(-7,7)+'deg');
+ d.innerHTML='<span class="pc ol">+'+F2(e)+'</span>'+(a>=1?`<span class="pk ol">客+${F2(a)}</span>`:'');el.append(d);setTimeout(()=>d.remove(),1200)}
+
+/* コウモリちょこ：bat.png が右下→左上へ飛んでいく */
+function fxBat(){const L=lay();if(!L)return;const W=L.clientWidth,H=L.clientHeight,T=1.7;let h='';
+ [[.22,0,0],[.15,.12,-.07],[.11,.24,.06]].forEach(([wf,dl,oy],k)=>{const w=Math.round(W*wf),sx=W*.8+k*10,sy=H*(.66+oy),ex=-w-30,ey=H*(.04+k*.05+oy*.5),dx=ex-sx,dy=ey-sy;
+  h+=`<div class="bat" style="left:${sx.toFixed(0)}px;top:${sy.toFixed(0)}px;width:${w}px;--dx:${dx.toFixed(0)}px;--dy:${dy.toFixed(0)}px;--t:${T}s;--d:${dl}s"><div class="by"><div class="bf"><img src="bat.png" onerror="this.outerHTML='<span class=fe style=font-size:${w}px>🦇</span>'"></div></div></div>`;
+  if(k==0)for(let s=1;s<=12;s++){const u=s/12,ux=u*u*(3-2*u),uy=1-Math.pow(1-u,2.2);h+=star(sx+w/2+dx*ux+ri(-8,8),sy+w*.3+dy*uy+ri(-8,8),ri(10,19),dl+u*T*.92)}});
+ addLay(L,h,T*1000+700)}
+
+/* おばけぷりん：ghosts.png だけが左上→右下へ、薄くなりながら移動 */
+function fxGhost(){const L=lay();if(!L)return;const W=L.clientWidth,H=L.clientHeight,w=Math.round(Math.min(W*.5,240)),T=2.6,sx=-w*.3,sy=H*.02,dx=(W-w*.62)-sx,dy=H*.58-sy;let h='';
+ [[1,0],[.5,.16],[.26,.32]].forEach(([o,dl])=>{h+=`<div class="gho" style="left:${sx.toFixed(0)}px;top:${sy.toFixed(0)}px;--w:${w}px;--dx:${dx.toFixed(0)}px;--dy:${dy.toFixed(0)}px;--t:${T}s;--d:${dl}s"><div class="gop"><div class="gw" style="--o:${o}"><img src="ghosts.png" onerror="this.outerHTML='<span class=fe style=font-size:${Math.round(w*.8)}px>👻</span>'"></div></div></div>`});
+ addLay(L,h,T*1000+800)}
+
+/* かぼちゃぱん：かぼちゃがぽんぽんっと飛び出す */
+function fxPump(i,own){const L=lay();if(!L)return;const o=org(i,L);if(!o)return;let h='';
+ for(let k=0;own&&k<7;k++){const a=-Math.PI/2+(k-3)*.42+(Math.random()-.5)*.2,d=ri(70,130);
+  h+=`<span class="pmk" style="--x0:${o.x.toFixed(0)}px;--y0:${o.y.toFixed(0)}px;--dx:${(Math.cos(a)*d*.9).toFixed(0)}px;--dy:${(Math.sin(a)*d).toFixed(0)}px;--g:${ri(40,70)}px;--r:${ri(-70,70)}deg;--t:${(1+Math.random()*.3).toFixed(2)}s;--d:${(k*.03).toFixed(2)}s">🎃</span>`}
+ h+=bursts(16,{x:o.x.toFixed(0)+'px',y:o.y.toFixed(0)+'px',pal:ORP,d0:40,d1:120,a:-Math.PI/2,sp:Math.PI*1.5,g:70,dl:.05});
+ addLay(L,h,1900)}
+
+/* にんじん／yellow_bat：かぼちゃぱん風にぽんっと飛ぶ */
+const YEP=['#ffe14d','#fff36b','#ffb347','#ffffff'];
+function fxProj(i,src,emo,n,sz,pal){const L=lay();if(!L)return;const o=org(i,L);if(!o)return;let h='';
+ for(let k=0;k<n;k++){const a=-Math.PI/2+(k-(n-1)/2)*.62+(Math.random()-.5)*.2,d=ri(80,130);
+  h+=`<span class="pmk" style="--x0:${o.x.toFixed(0)}px;--y0:${o.y.toFixed(0)}px;--dx:${(Math.cos(a)*d*.9).toFixed(0)}px;--dy:${(Math.sin(a)*d).toFixed(0)}px;--g:${ri(40,70)}px;--r:${ri(-70,70)}deg;--t:${(1+Math.random()*.3).toFixed(2)}s;--d:${(k*.05).toFixed(2)}s;width:${sz}px;margin:${-sz/2}px 0 0 ${-sz/2}px"><img src="${src}" style="display:block;width:100%;height:auto" onerror="this.outerHTML='${emo}'"></span>`}
+ h+=bursts(12,{x:o.x.toFixed(0)+'px',y:o.y.toFixed(0)+'px',pal:pal,d0:40,d1:110,a:-Math.PI/2,sp:Math.PI*1.5,g:70,dl:.05});
+ addLay(L,h,1900)}
+
+/* クリスマスキャラ：presentbox.png が落ちてきて、ぱかっ！とお祝い */
+function pres(el){if(cur!=0||document.hidden||CFG.lite)return;const d=document.createElement('div');d.className='pres';
+ d.innerHTML=`<i class="ring"></i><div class="pbx"><img src="presentbox.png" onerror="this.outerHTML='<span class=fe>🎁</span>'"></div>`+bursts(18,{x:'50%',y:'18%',pal:XPAL,d0:36,d1:100,a:-Math.PI/2,sp:Math.PI*1.8,g:70,dl:.42});
+ el.append(d);setTimeout(()=>d.remove(),1500)}
+
+/* 獲得画面 */
+function acqHead(c,p){const sp=[[6,14,0],[92,10,.35],[2,62,.7],[96,60,.15],[20,94,.5],[80,92,.85]].map(([x,y,d])=>`<i class="st4 sp" style="left:${x}%;top:${y}%;--s:${ri(14,22)}px;--c:${pk(PAL)};--d:${d}s"></i>`).join('');
+ const nw=!S.seen[p.c]&&!S.pets.some(q=>q.c==p.c);
+ return`<div class="acqt">${[...'獲得！'].map((ch,k)=>`<span style="--k:${k}">${ch}</span>`).join('')}</div><div class="stg"><i class="rays"></i><i class="halo"></i>${sp}<div class="bw"><div class="big">${ic(c)}</div>${nw?'<div class="new ol">NEW!</div>':''}</div></div>`}
+function acqFx(c){const b=$('bx');b.scrollTop=0;if(CFG.lite)return;const g=b.querySelector('.get'),s=g&&g.querySelector('.stg');if(!g)return;const n=NB[c.r]||14;
+ const w1=document.createElement('div');w1.className='bw0';w1.innerHTML=bursts(n,{d0:70,d1:170,g:90,dl:.2});s.append(w1);setTimeout(()=>w1.remove(),2600);
+ const w2=document.createElement('div');w2.className='bw0';w2.innerHTML=falls(CFG.lv==2?Math.round(n*.25):Math.round(n*.7));g.append(w2);setTimeout(()=>w2.remove(),4600)}
+const snowOn=()=>placed().some(q=>C[q.c].n=='イチゴツリー わたげ'&&(q.sn||0)>Date.now());
+function snowTick(){if(cur!=0||document.hidden||CFG.lite||CFG.lv==2||CP||!snowOn())return;const L=$('fxs');if(!L)return;let h='';for(let k=0;k<4;k++)h+=`<i class="sf" style="--l:${ri(0,100)}%;--w:${ri(5,11)}px;--x:${ri(-40,40)}px;--t:${(3+Math.random()*2).toFixed(2)}s"></i>`;const w=document.createElement('div');w.innerHTML=h;[...w.children].forEach(e=>{L.append(e);setTimeout(()=>e.remove(),5300)})}
+setInterval(snowTick,250);
+function land(p,i){if(!p.pl||MEA||CP)return;const c=C[p.c],k=calc(p),sm=snowOn()?2:1,B=m=>1+(m-1)*sm,bt=m=>Math.round(B(m)*10)/10;let e=k.e,a=k.a,r=Math.random(),bo=0,sb=!!p.sx;delete p.sx;
+ if(XM.has(c.n)){e*=B(1.2);a*=B(1.2);fxProj(i,'presentbox.png','🎁',3,36,XPAL);log(c.n+'が発動！コインと集客コインを'+bt(1.2)+'倍獲得！')}
+ if(c.n=='コウモリちょこ'&&r<.25){e*=B(2);bo=1;fxBat();log('コウモリちょこが発動！コインを'+bt(2)+'倍獲得！')}
+ if(c.n=='おばけぷりん'&&r<.25){a*=B(2);bo=1;fxGhost();log('おばけぷりんが発動！集客コインを'+bt(2)+'倍獲得！')}
+ if(c.n=='サンタぱんぴー'&&Math.random()<.5){santa(p,i);sb=true}
+ if(c.n=='野菜いっぱいぱんぴー&かのん'&&Math.random()<.2){a*=B(2);bo=1;fxProj(i,'carrot.png','🥕',3,40,ORP);log('野菜いっぱいぱんぴー&かのんが発動！集客コインを'+bt(2)+'倍獲得！')}
+ if(c.n=='コウモリれもん'){e*=B(3);a*=B(3);bo=1;fxProj(i,'yellow_bat.png','🦇',3,46,YEP);log('コウモリれもんが発動！コインと集客コインを'+bt(3)+'倍獲得！')}
+ {const w=placed().find(q=>C[q.c].n=='イチゴツリー わたげ');if(w){w.ld=(w.ld||0)+1;if(w.ld%1000==0){w.sn=Date.now()+3e4;log('「雪降り」発動！30秒間、着地時の効果が2倍')}}}
+ if(sb){const bn=a*1.5*sm;e+=bn;bo=1;log(c.n+'のプレゼントジャンプ着地！集客コインの'+(1.5*sm)+'倍のコインを獲得！')}
+ add('coin',e);add('cust',a);puff(i);pop(i,e,a,bo)}
+function live(d){if(TM)return;if(S.pets.length==0){const R=C.filter(c=>c.r=='R');const p=give(mk(R[ri(0,R.length-1)]));p.e=10;p.a=0;p.pl=true;toast('ペットがいないので '+C[p.c].n+' が来ました');rc()}}
+function off(ms){const pl=placed();let ce=0,ca=0,f=0;const w=pl.find(p=>C[p.c].n=='イチゴツリー わたげ');
+ if(w){const N=pl.reduce((t,p)=>t+ms/(calc(p,pl).sp*5e3),0),ld=w.ld||0,tot=ld+N,tr=Math.floor(tot/1e3)-Math.floor(ld/1e3);w.ld=Math.floor(tot);f=Math.min(1,tr*3e4/ms);if(tr>0){const t=Date.now()-ms+(Math.floor(tot/1e3)*1e3-ld)/N*ms;w.sn=Math.max(w.sn||0,t+3e4)}}
+ const sa=pl.reduce((t,q)=>t+calc(q,pl).a,0);
+ pl.forEach(p=>{const k=calc(p,pl),c=C[p.c],n=ms/(k.sp*5e3);let xe=1,xa=1,se=1,sa2=1;LND(c).forEach(([,pr,m1,m2])=>{xe*=1+pr*(m1-1);xa*=1+pr*(m2-1);se*=1+pr*(m1-1)*2;sa2*=1+pr*(m2-1)*2});
+  ce+=k.e*((1-f)*xe+f*se)*n;ca+=k.a*((1-f)*xa+f*sa2)*n;if(c.n=='サンタぱんぴー')ce+=n*.5*1.5*(1+f)*sa});
+ add('coin',ce);add('cust',ca);if(ce+ca>0)toast('おかえりなさい！ コイン+'+F(ce)+' 集客コイン+'+F(ca),4500)}
+function bar(){$('top').innerHTML='所持コイン:'+F(S.coin)+'<br>所持集客コイン:'+F(S.cust)+(TM?'<span id="tmb">🧪検証用モード</span>':'')}
+function rc(){const pl=placed().slice(0,5);let h='';for(let i=0;i<5;i++)h+=`<div class="cell" id="c${i}" ${pl[i]?`onpointerdown="cps(${pl[i].u})" onpointerup="cpe()" onpointerleave="cpe()" onpointercancel="cpe()" oncontextmenu="return false" onclick="if(cpf){cpf=0;return}cdet(${pl[i].u})"`:''}>${pl[i]?ic(C[pl[i].c])+'<i class="sh"></i>':`<div class="ic" style="--h:0;border-color:#999;opacity:.3"></div>`}</div>`;$('row').innerHTML=h;
+ let e=0,a=0;pl.forEach(p=>{const k=calc(p,pl);e+=k.e/k.sp;a+=k.a/k.sp});$('sum').innerHTML=`合計稼ぎ力:${F(e)}/毎秒<br>合計集客力:${F(a)}/毎秒`}
+function go(k){cur=k;if(k==1)pv=null;$('msnb').style.display=k==0&&!TM?'':'none';$('meab').style.display=k==0&&TM?'':'none';$('cpb').style.display=k==0&&TM?'':'none';['s0','s1','s2'].forEach((s,i)=>$(s).classList.toggle('on',i==k));rend()}
+function rend(){bar();if(cur==1)rp();if(cur==2)re()}
+function rp(){const L=srt(),el=$('s1');if(!L.length){el.innerHTML='<div class="pn">ペットがいません</div>';return}pi=Math.min(pi,L.length-1);const p=L[pi],c=C[p.c],lk=p.lk>Date.now();
+ el.innerHTML=`<div style="font-size:15px">ペット管理 (配置 ${placed().length}/5)　${pi+1}/${L.length}</div><div class="ar" style="margin:auto 0"><button onclick="pi=(pi+L0-1)%L0;rp()">‹</button><div class="big" style="flex:1">${ic(c)}</div><button onclick="pi=(pi+1)%L0;rp()">›</button></div><div style="text-align:center">${lk?`<span>再配置まで あと${Math.ceil((p.lk-Date.now())/864e5)}日</span>`:`<button class="btn" onclick="tgl(${p.u})">${p.pl?'カフェから外す':'カフェに配置する'}</button>`}</div><div class="pn">${inf(p)}</div>`;window.L0=L.length}
+function tgl(u){const p=P(u),n=C[p.c].n;if(p.pl)p.pl=false;else{if(placed().length>=5)return toast('配置は最大5匹までです');const k=placed().filter(q=>C[q.c].n==n).length;if(ONE.has(n)&&k>=1)return toast('このキャラは1体までしか配置できません');if(k>=2)return toast('同じキャラは2体まで配置できます');p.pl=true}rc();rp();save()}
+function tl(ms){const m=Math.ceil(ms/6e4),s=Math.ceil(ms/1e3)%60;return m>60?`残り${Math.floor(m/60)}時間${m%60}分`:`残り${Math.floor(ms/6e4)}分${s}秒`}
+function re(){const n=Date.now();let h='<div style="text-align:center;font-size:20px;margin-top:70px">卵スロット</div><div class="slots">';
+ S.slots.forEach((s,i)=>{if(!s){h+=`<div><div>空き</div><div class="egg"></div></div>`;return}const rd=s.ready<=n,sk=E[s.t].sk&&S.sk[s.t]>0&&!rd;
+  h+=`<div><div>${rd?'孵化！':tl(s.ready-n)}</div><div class="egg" onclick="${rd?`hat(${i})`:''}">${rd?ic(C[s.pet.c]):`<div style="width:100%;height:100%;background:${E[s.t].col};opacity:.9;display:grid;place-items:center">🥚<img src="${E[s.t].f}.png" onerror="this.remove()" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain"></div>`}</div>${sk?`<button class="btn" style="font-size:12px;padding:4px 6px" onclick="skip(${i})">スキップ(残${S.sk[s.t]})</button>`:''}</div>`});
+ h+=`</div><div style="text-align:center;font-size:13px;margin-top:8px">UR所持による孵化短縮: -${urb()*5}分</div><div class="shop">`;
+ E.forEach((e,t)=>{const ok=S[e.c]>=e.v;h+=`<div class="${ok?'':'dim'}"><div>${e.n}</div><div>${F(e.v)}${e.c=='coin'?'コイン':'集客コイン'}</div><div class="egg" onclick="buy(${t})" style="background:${e.col}"><img src="${e.f}.png" onerror="this.remove()" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain"><span>購入</span></div></div>`});
+ $('s2').innerHTML=h+'</div>'}
+function buy(t){const e=E[t],i=S.slots.findIndex(x=>!x);if(i<0)return toast('卵スロットが満杯です');if(S[e.c]<e.v)return toast('コインが足りません');S[e.c]-=e.v;S.slots[i]={t,ready:Date.now()+Math.max(0,e.h*36e5-urb()*3e5),pet:roll(t)};re();bar();save()}
+function skip(i){const s=S.slots[i];if(S.sk[s.t]>0){S.sk[s.t]--;s.ready=Date.now();re();save()}}
+function hat(i){const p=S.slots[i].pet;if(S.pets.length>=MAXB)return toast('バッグが満タンです');M(`<h1>獲得！</h1><div class="big">${ic(C[p.c])}</div><div class="pn">${inf(p)}</div><button class="btn" onclick="acqOK(${i})">バッグに入れる</button><button class="btn" onclick="ask('野生に放ちますか？\\n(放つとペットは獲得されません)',()=>{S.slots[${i}]=null;cl();re();save()})">野生に放つ</button>`,'dk')}
+function acqOK(i){if(S.pets.length>=MAXB)return toast('バッグが満タンです');const p=give(S.slots[i].pet);{const r=C[p.c].r;if(r=='SSR')S.gs++;if(r=='UR')S.gu++;chkM()}S.slots[i]=null;fly($('bx').querySelector('.big').innerHTML);cl();re();save()}
+function fly(h){const e=document.createElement('div');e.className='fly';e.innerHTML=h;$('app').append(e);const b=$('bagb'),r=b.getBoundingClientRect();requestAnimationFrame(()=>requestAnimationFrame(()=>{e.style.transform=`translate(${r.left-innerWidth/2+r.width/2}px,${r.top-innerHeight*.4+r.height/2}px) scale(.15) rotate(28deg)`;e.style.opacity='.25'}));
+ setTimeout(()=>{e.remove();b.classList.remove('bump');void b.offsetWidth;b.classList.add('bump');const w=document.createElement('div');w.className='bw0';w.style.zIndex=6;w.innerHTML=bursts(10,{x:'50%',y:'50%',pal:PAL,d0:22,d1:50,g:10,w:1});b.append(w);setTimeout(()=>w.remove(),1300)},780)}
+function M(h,c){$('ov').dataset.k=c||'';$('bx').className='box '+(c||'');$('bx').innerHTML=h;$('ov').classList.add('on')}
+function cl(){$('ov').classList.remove('on');rend()}
+function ask(m,f){window.cb=f;$('bx2').innerHTML=`<div style="white-space:pre-line;margin-bottom:10px">${m}</div><button class="btn" onclick="$('ov2').classList.remove('on');cb()">はい</button><button class="btn" onclick="$('ov2').classList.remove('on')">いいえ</button>`;$('ov2').classList.add('on')}
+function take(b,k){const x=S[b];S[b]=0;add(k,x);bag();bar();save()}
+function bag(){const sv=srt(),n=Object.keys(S.seen).length;M(`<div class="rw"><b>持ち物</b><button class="btn" onclick="cl()">閉じる</button></div>
+<div class="rw"><span>コイン貯金箱 ${F(S.boxC)}</span><button class="btn" onclick="take('boxC','coin')">取り出す</button></div><div class="rw"><span>集客コイン貯金箱 ${F(S.boxK)}</span><button class="btn" onclick="take('boxK','cust')">取り出す</button></div>
+<h3>卵 (${S.slots.filter(x=>x).length}/3)</h3><div>${S.slots.map(s=>s?E[s.t].n:'-').join(' / ')}</div>
+<h3>ペット ${S.pets.length}/${MAXB}</h3><div class="grid">${sv.map(p=>`<div onclick="pinfo(${p.u})">${ic(C[p.c])}</div>`).join('')}</div><div id="pinf"></div>
+<h3>図鑑 ${n}/${C.length}</h3><div class="grid">${C.slice().sort((a,b)=>a.id-b.id).map(c=>`<div class="it" onclick="dex(${c.id})">${icS(c)}</div>`).join('')}</div>`)}
+function pinfo(u){const p=P(u);$('pinf').innerHTML=`<div class="pn" style="margin:8px 0">${inf(p)}<button class="btn" onclick="ask('野生に放ちますか？',()=>{S.pets=S.pets.filter(q=>q.u!=${u});rc();bag();save()})">野生に放つ</button></div>`}
+const tgt=k=>CFG[k]?'ON':'OFF';
+function tgb(k,l){return`<button id="tg_${k}" data-l="${l||''}" class="btn tgb${CFG[k]?' pri':''}" onclick="tgc('${k}')">${l||''}${tgt(k)}</button>`}
+function tgc(k){CFG[k]=CFG[k]?0:1;scfg();const b=$('tg_'+k);if(b){b.textContent=(b.dataset.l||'')+tgt(k);b.classList.toggle('pri',!!CFG[k])}
+ $('app').classList.toggle('lite',!!CFG.lite);$('app').classList.toggle('sm',!!CFG.sm);if(k=='bgm'){if(CFG.bgm){if(bg)bg.play().catch(()=>{});else bgm()}else if(bg)bg.pause()}}
+function setm(){const code=btoa(unescape(encodeURIComponent(JSON.stringify(S))));M(`<div class="rw"><b>設定</b><button class="btn" onclick="cl()">閉じる</button></div>
+<div class="rw"><span>効果音</span>${tgb('se')}</div><div class="rw"><span>BGM</span>${tgb('bgm')}</div>
+<div class="lvs"><div class="rw"><span>軽量化レベル <b id="lvn">${CFG.lv}</b></span></div><div class="mx"><span style="font-size:12px">1</span><input type="range" min="1" max="5" step="1" value="${CFG.lv}" oninput="setLv(this.value)"><span style="font-size:12px">5</span></div><small id="lvt">${LVT[CFG.lv]}</small></div>
+<div class="rw"><span>テキスト縮小モード<br><small>稼いだ数の表示をひとまわり小さくします</small></span>${tgb('sm')}</div>
+<button class="btn" onclick="calcV()">計算式を見る</button><button class="btn" onclick="setMode(${TM?0:1})">${TM?'通常モードに戻る':'検証用モードへ切り替える'}</button>
+<div class="qrow"><details class="qd"><summary>クイック機能について</summary><div class="qb">長押しなどの近道操作です。<br>・カフェ画面：ペットを長押し → カフェから外す<br>・持ち物：ペットを長押し → 「野生に放ちますか？」を表示（開かずに放せます）<br>・ペット管理：ペットを長押し → カフェに配置（タップはすぐ詳細が開きます）<br>OFFにすると、これらの長押し操作は無効になります。</div></details>${tgb('quick','クイック機能 ')}</div>
+${TM?'':'<button class="btn" onclick="tut(0)">チュートリアルを見る</button>'}
+${TM?'':`<h3>引き継ぎコード</h3><textarea id="cd" readonly>${code}</textarea><button class="btn" onclick="$('cd').select();try{navigator.clipboard.writeText($('cd').value)}catch(e){document.execCommand('copy')}toast('コピーしました')">コピー</button><h3>引き継ぐ</h3><div class="warn">⚠ 引き継ぎを行うと、孵化中・孵化済みの卵はすべて破棄されます（リセマラ対策）。破棄された卵は元に戻せません。</div><textarea id="imp" placeholder="コードを貼り付け"></textarea><button class="btn" onclick="imp()">引き継ぐ</button>`}`)}
+let cpt,cpf=0,bpt,bpf=0;
+function cps(u){cpf=0;clearTimeout(cpt);if(!CFG.quick)return;cpt=setTimeout(()=>{cpf=1;const p=P(u);if(p&&p.pl){p.pl=false;rc();save();toast(C[p.c].n+'をカフェから外しました')}},500)}
+function cpe(){clearTimeout(cpt)}
+function bps(u){bpf=0;clearTimeout(bpt);if(!CFG.quick)return;bpt=setTimeout(()=>{bpf=1;ask('野生に放ちますか？',()=>relz(u))},500)}
+function bpe(){clearTimeout(bpt)}
+function relz(u){S.pets=S.pets.filter(x=>x.u!=u);bsel=0;rc();bag();save()}
+const TUT=[
+['カフェ画面',`ペットをカフェに配置すると、自動でジャンプしてコインと集客コインを稼ぎます。<br>・配置できるのは最大5匹。同じキャラは2体まで配置できます（サンタぱんぴー・かぼちゃぱん・雪だるまゆきみ・亡霊くるみ・イチゴツリー わたげは1体まで）<br>・同じキャラの効果が重複するのは、配置がすべてハロウィンキャラ、またはすべてクリスマスキャラで統一されているときだけです<br>・画面右上の「設定」「持ち物」「ミッション」ボタンから各機能を開けます（ミッションはカフェ画面のみ）`],
+['卵管理画面',`コインや集客コインで卵を買うと、卵スロット(3つ)で孵化が始まります。<br>・卵をタップすると購入確認が出ます（「確率を見る」で排出確率を確認できます）<br>・孵化が終わったらスロットをタップして、ペットを獲得しましょう<br>・獲得したペットは「バッグに入れる」か「野生に放つ」を選べます<br>・イベントの卵（ハロウィン／クリスマス）を買うと「イベントキャラ交換チケット」が1枚もらえます。5枚集めると、卵管理画面の「イベントキャラ交換」ボタンから好きなイベントキャラと交換できます`],
+['ペット管理画面',`持っているペットの一覧です。<br>・ペットをタップすると、すぐに詳細が開きます。「カフェに配置する」で配置できます<br>・長押しすると、詳細を開かずにカフェへ配置できます(クイック機能)<br>・詳細では左右の矢印で他のペットに切り替えられます<br>・稼ぎ力、集客力、速度、特殊効果が確認できます（アイコン右上には、毎秒の稼ぎと集客を表示します）<br>・持ち物の図鑑のアイコンをタップすると、性能を確認できます（未入手のキャラもシルエットのまま性能を見られます）`],
+['卵の弾き方',`いらない卵は手放せます。<br>・孵化中の卵をタップ →「孵化を放棄」で孵化を中断します。<b>支払ったコインは戻りません</b><br>・孵化した後にいらないペットが出たときは、獲得画面の「野生に放つ」を選べば獲得されません`],
+['孵化加速',`孵化は待つ以外にも早められます。<br>・ふつう／レアな卵は、スキップ券（残り回数あり）で即孵化できます<br>・孵化中の卵をタップ →「スキップする」で、コインを使って時間を短縮できます（2億コイン＝1分）<br>・URキャラを持っていると、全ての卵の孵化時間が5分短くなります（同名は重複しません）`],
+['クイック機能',`長押しなどの近道操作です。<br>・カフェ画面：ペットを長押しでカフェから外す<br>・持ち物：ペットを長押しで「野生に放ちますか？」を表示<br>・ペット管理：長押しで配置（外すときは詳細画面かカフェ画面から）<br>設定画面で、ON/OFFを切り替えられます。`],
+['計算式の確認',`設定の「計算式を見る」で、今の配置の倍率や速度がどう計算されているかを確認できます。<br>・ペットごとの稼ぎ／集客／速度の計算過程<br>・着地時の確率効果と期待値<br>また、設定の「テキスト縮小モード」で、稼いだ数の表示を小さくできます。`],
+['引き継ぎ機能',`機種変更のときは、設定画面の「引き継ぎコード」をコピーして、新しい端末の「引き継ぐ」に貼り付けます。<br>※ 引き継ぎをすると、孵化中・孵化済みの卵はすべて破棄されます。`],
+['初心者ミッション',`カフェ画面のミッションボタンから、初心者パネルミッションを確認できます。<br>全てクリアすると「ハロウィン卵無料チケット」と「クリスマス卵無料チケット」が1枚ずつもらえます。チケットは持ち物から使えます。`]];
+function tut(k){const t=TUT[k],last=k==TUT.length-1;M(`<div class="tut"><div class="tt">${t[0]}</div><div class="tb">${t[1]}</div><div class="td">${TUT.map((_,x)=>`<i class="${x==k?'on':''}"></i>`).join('')}</div><div class="bts">${k?`<button class="btn" onclick="tut(${k-1})">戻る</button>`:''}<button class="btn pri" onclick="${last?'tutEnd()':`tut(${k+1})`}">${last?'はじめる！':'次へ'}</button></div>${last?'':'<button class="btn" style="font-size:12px;margin-top:8px" onclick="tutEnd()">スキップ</button>'}</div>`)}
+function tutEnd(){CFG.tut=1;scfg();cl()}
+function imp(){if(TM)return;let d;try{d=JSON.parse(decodeURIComponent(escape(atob($('imp').value.trim()))));if(!d||typeof d!='object'||!Array.isArray(d.pets)||!Array.isArray(d.slots))throw 0}catch(e){return toast('コードが正しくありません')}
+ ask('現在のデータを上書きします。\n孵化中の卵はすべて破棄されます。よろしいですか？',()=>{S=mig(d);S.slots=[null,null,null];S.last=Date.now();save();cl();rc();go(cur);toast('引き継ぎました')})}
+let ac;function beep(f=520){try{ac=ac||new(window.AudioContext||webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=f;g.gain.value=.05;o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+.08)}catch(e){}}
+document.addEventListener('pointerdown',e=>{unlockAud();bgm();if(e.target.closest('button,.eg,.it,.sb'))snd('tap')});
+let lt=Date.now(),lp=performance.now();
+setInterval(()=>{const n=Date.now(),pn=performance.now(),d=n-lt,pd=pn-lp;lt=n;lp=pn;
+ if(d<pd-3000){toast('端末時刻の巻き戻しを検知しました');return}
+ if(d>3000){if(!TM)off(d)}else live(d);rc0();bar();tickE()},1000);
+function rc0(){lgr();const pl=placed();let e=0,a=0;pl.forEach(p=>{const k=calc(p,pl);e+=k.e/k.sp;a+=k.a/k.sp});$('sum').innerHTML=`合計稼ぎ力:${F(e)}/毎秒<br>合計集客力:${F(a)}/毎秒`}
+setInterval(save,5000);document.addEventListener('visibilitychange',()=>{if(document.hidden)save();else if(AC&&AC.state!='running'&&AC.resume){try{AC.resume()}catch(e){}}if(bg)document.hidden||!CFG.bgm?bg.pause():bg.play().catch(()=>{})});
+let pv=null;const AU={};let bg;
+let AC=null;const AB={},LS={};
+function actx(){if(AC===null){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(e){AC=0}}return AC||null}
+function unlockAud(){const c=actx();if(c&&c.state!='running'&&c.resume){try{const r=c.resume();if(r&&r.catch)r.catch(()=>{})}catch(e){}}['tap','kakutoku'].forEach(loadSnd)}
+function loadSnd(n){if(n in AB)return;AB[n]=0;const c=actx();if(!c){AB[n]=null;return}
+ fetch(n+'.wav').then(r=>{if(!r.ok)throw 0;return r.arrayBuffer()}).then(b=>new Promise((ok,ng)=>{const q=c.decodeAudioData(b,ok,ng);if(q&&q.catch)q.catch(ng)})).then(buf=>{AB[n]=buf}).catch(()=>{AB[n]=null})}
+function snd(n,v=1){if(!CFG.se)return;const t=performance.now();if(LS[n]&&t-LS[n]<60)return;LS[n]=t;const c=actx();loadSnd(n);const b=AB[n];
+ if(c&&b){try{if(c.state!='running'&&c.resume)c.resume();const s=c.createBufferSource(),g=c.createGain();g.gain.value=v;s.buffer=b;s.connect(g);g.connect(c.destination);s.start(0)}catch(e){}return}
+ if(b===0)return;
+ try{const a=new Audio(n+'.wav');a.volume=v;a.play().catch(()=>{})}catch(e){}}
+function bgm(){if(bg||!CFG.bgm)return;try{bg=new Audio('BGM.wav');bg.loop=true;bg.volume=.35;bg.play().catch(()=>{bg=null})}catch(e){}}
+const eggImg=t=>`<img src="${E[t].f}.png" onerror="this.outerHTML='<span class=em2 style=filter:hue-rotate(${t*60}deg)>🥚</span>'">`;
+function rp(){const el=$('s1'),L=srt(),st=el.scrollTop;
+ if(pv==null||!P(pv)){pv=null;el.innerHTML=`<div class="hd"><span>ペット管理　配置 ${placed().length}/5</span></div><div class="grid g4">${L.map(p=>`<div class="it" oncontextmenu="return false" onpointerdown="lpS(${p.u})" onpointerup="lpE()" onpointerleave="lpE()" onpointercancel="lpE()" onclick="itc(${p.u})">${tile(p)}${p.pl?'<i class="pl">配置中</i>':''}</div>`).join('')}</div>`;el.scrollTop=wd?lsc:st;wd=0;return}
+ wd=1;const i=L.findIndex(p=>p.u==pv),p=L[i],a=L[(i+L.length-1)%L.length].u,b=L[(i+1)%L.length].u;
+ el.innerHTML=`<div class="dv"><div class="hd"><button class="btn" onclick="pv=null;rp()">‹ 一覧</button><span>${i+1}/${L.length}</span></div><div class="ar" style="margin:auto 0"><button onclick="pv=${a};rp()">‹</button><div class="big" style="flex:1">${ic(C[p.c])}</div><button onclick="pv=${b};rp()">›</button></div><div style="text-align:center">${0?'':`<button class="btn pri" onclick="tglD(${p.u})">${p.pl?'カフェから外す':'カフェに配置する'}</button>`}</div><div class="pn">${inf(p)}</div></div>`;el.scrollTop=0}
+function re(){if(TM)return rs();const el=$('s2'),st=el.scrollTop,n=Date.now();let h='<div class="ttl">卵スロット</div><div class="slots">';
+ S.slots.forEach((s,i)=>{if(!s){h+=`<div><div class="tm">空き</div><div class="eg"></div></div>`;return}const rd=s.ready<=n,sk=E[s.t].sk&&S.sk[s.t]>0&&!rd;
+  h+=`<div data-r="${rd?1:0}"><div class="tm" id="tm${i}">${rd?'孵化！':tl(s.ready-n)}</div><div class="eg" onclick="${rd?`hat(${i})`:`sk2(${i})`}">${rd?ic(C[s.pet.c]):eggImg(s.t)}</div>${sk?`<button class="btn" style="font-size:12px;padding:4px 6px" onclick="skip(${i})">スキップ(残${S.sk[s.t]})</button>`:''}</div>`});
+ h+=`</div><div style="text-align:center;font-size:13px;margin-top:8px;color:var(--cocoa)">UR所持による孵化短縮: -${urb()*5}分</div><div style="text-align:center;margin-top:8px"><button class="btn pri" onclick="xch()">イベントキャラ交換 (チケット${S.xt}/5)</button></div><div class="shop">${E.map((e,t)=>`<div class="${S[e.c]>=ecost(e)?'':'dim'}" onclick="eask(${t})"><div class="eg">${eggImg(t)}</div><div>${e.n}</div><div class="pr">${F(ecost(e))}${e.c=='coin'?'コイン':'集客コイン'}</div><span class="bb">購入</span></div>`).join('')}</div>`;
+ el.innerHTML=h;el.scrollTop=st}
+function cdet(u){const p=P(u);if(!p)return;const c=C[p.c];M(`<div class="acq"><div class="big">${ic(c)}</div><div class="acqn">${c.n}</div><span class="rb" style="background:${RC[c.r]}">${c.r}</span><div class="pn" style="text-align:left">${inf(p)}</div><div class="bts"><button class="btn pri" onclick="rmv(${u})">カフェから外す</button><button class="btn" onclick="cl()">閉じる</button></div></div>`)}
+function rmv(u){const p=P(u);if(p){p.pl=false;rc();save()}cl()}
+function xch(){const ev=k=>C.filter(c=>c.ev==k).map(c=>`<div class="it" onclick="xsel(${c.id})">${ic(c)}</div>`).join('');
+ M(`<div class="rw"><b>イベントキャラ交換</b><button class="btn" onclick="cl()">閉じる</button></div><div class="pn fm">チケット ${S.xt}枚 ／ 5枚で好きなイベントキャラと交換できます<br>イベントの卵を買うと1枚もらえます</div><h3>ハロウィン</h3><div class="grid">${ev('h')}</div><h3>クリスマス</h3><div class="grid">${ev('x')}</div>`)}
+function xsel(id){const c=C[id];M(`<div class="acq"><div class="big" style="width:96px">${ic(c)}</div><div class="acqn">${c.n}</div><div class="pn fm">${eff(c)}</div><div>チケット ${S.xt}/5</div><div class="bts"><button class="btn pri" onclick="xgo(${id})">5枚で交換する</button><button class="btn" onclick="xch()">戻る</button></div></div>`)}
+function xgo(id){if(S.xt<5)return toast('チケットが足りません');if(S.pets.length>=MAXB)return toast('バッグが満タンです');const c=C[id],p=mk(c),hd=acqHead(c,p);S.xt-=5;give(p);snd('kakutoku');
+ M(`<div class="acq get" style="--rb:${RB[c.r]}">${hd}<div class="acqn">${c.n}</div><span class="rb" style="background:${RC[c.r]}">${c.r}</span><div class="pn" style="text-align:left">${inf(p)}</div><div class="bts"><button class="btn pri" onclick="cl()">OK</button></div></div>`,'acqx');acqFx(c);save()}
+Object.assign(EF,{かぼちゃぱん:'配置時、ハロウィンキャラ(自身含む)の速度が25%アップ／1体まで配置可',サンタぱんぴー:'着地時、50%の確率で、配置しているキャラ全員がサンタぱんぴーの速度基準で一斉にジャンプ／1体まで配置可',雪だるまゆきみ:'配置時、配置しているキャラ全員(自身含む)の速度が-50%(間隔が2倍)。自身が得る集客コインは2倍／1体まで配置可',亡霊くるみ:'配置時、ハロウィンキャラ(自身含む)の稼ぎ力と集客力が1.5倍／1体まで配置可','イチゴツリー わたげ':'配置時、クリスマスキャラ(自身含む)の速度が30%アップ／1体まで配置可'});
+let bsc=0,lsc=0,wd=0;
+function dex(id){bsc=$('bx').scrollTop;const c=C[id],g=RG[c.r],lo={ER:.33,LR:.5,UR:.75}[c.r]||1,ev=c.ev=='h'?'ハロウィン':c.ev=='x'?'クリスマス':'';
+ M(`<div class="acq"><div class="big" style="width:110px">${icS(c)}</div><div class="acqn">${c.n}</div><span class="rb" style="background:${RC[c.r]}">${c.r}</span>${ev?`<div>${ev}キャラ</div>`:''}<div class="pn fm"><b>性能(個体ごとにランダム)</b><br>稼ぎ ${F(g[0][0])}〜${F(g[0][1])}/回<br>集客 ${F(g[1][0])}〜${F(g[1][1])}/回<br>速度 ${lo<1?lo.toFixed(2)+'〜1.00':'1.00'}秒/回<br>特殊効果：${eff(c)}</div><div class="bts"><button class="btn" onclick="bag(1)">戻る</button><button class="btn" onclick="cl()">閉じる</button></div></div>`)}
+function tickE(){if(cur!=2)return;const n=Date.now();for(let i=0;i<3;i++){const s=S.slots[i];if(!s)continue;const rd=s.ready<=n,t=$('tm'+i);if(!t||t.parentNode.dataset.r!=(rd?1:0))return re();if(!rd)t.textContent=tl(s.ready-n)}}
+function hat(i){const p=S.slots[i].pet,c=C[p.c];if(S.pets.length>=MAXB)return toast('バッグが満タンです');snd('kakutoku');cnt(i);M(`<div class="acq get" style="--rb:${RB[c.r]}">${acqHead(c,p)}<div class="acqn">${c.n}</div><span class="rb" style="background:${RC[c.r]}">${c.r}</span><div class="pn" style="text-align:left">${inf(p)}</div><div class="bts"><button class="btn pri" onclick="acqOK(${i})">バッグに入れる</button><button class="btn" onclick="ask('野生に放ちますか？(放つとペットは獲得されません)',()=>{S.slots[${i}]=null;cl();re();save()})">野生に放つ</button></div></div>`,'acqx');acqFx(c)}
+C.slice(0,3).forEach(c=>c.ev='h');
+[['魔女ぱんぴー','h'],['魔法使いぴの','h'],['オオカミこぷく','h'],['プレゼントぷりん','x'],['クリスマスツリーちょこ&ぱん','x'],['クリスマスパーティーいちご','x'],['サンタぱんぴー','x'],['雪だるまゆきみ','x']].forEach(([n,ev])=>C.push({r:'ER',n,id:C.length,ev}));
+E[5].ev='h';E[5].v=25e7;E.push({n:'クリスマスの卵',f:'christmas_egg',h:16,p:{ER:100},c:'cust',v:1e8,col:'#2a8',ev:'x'});
+const HW=['魔女ぱんぴー','魔法使いぴの','オオカミこぷく'],XM=new Set(['プレゼントぷりん','クリスマスツリーちょこ&ぱん','クリスマスパーティーいちご']);
+[['かのん','UR',''],['野菜いっぱいぱんぴー&かのん','LR',''],['戦隊ぽてうさ','LR',''],['亡霊くるみ','ER','h'],['コウモリれもん','ER','h'],['イチゴツリー わたげ','ER','x']].forEach(([n,r,ev])=>C.push({r,n,id:C.length,ev}));
+LE['戦隊ぽてうさ']=['a',1.2];const ONE=new Set(['サンタぱんぴー','かぼちゃぱん','雪だるまゆきみ','亡霊くるみ','イチゴツリー わたげ']);
+Object.assign(EF,{かのん:'配置時、ER以外のキャラの速度が20%アップ／所持で全卵の孵化時間-5分(孵化短縮は同名で重複しない)','野菜いっぱいぱんぴー&かのん':'着地時、20%の確率で集客コインが2倍(自身のみ)',戦隊ぽてうさ:'配置時、配置しているキャラ全員の集客力が1.2倍',亡霊くるみ:'配置時、ハロウィンキャラ(自身含む)の稼ぎ力と集客力が1.5倍',コウモリれもん:'配置時、自身の速度-300%(間隔が4倍)。着地時、100%でコインと集客コインが3倍','イチゴツリー わたげ':'配置時、クリスマスキャラ(自身含む)の速度が30%アップ'});
+Object.assign(EF,{魔女ぱんぴー:'配置時、配置キャラ全員の速度が15%アップ',魔法使いぴの:'配置時、配置キャラ全員の速度が15%アップ',オオカミこぷく:'配置時、配置キャラ全員の速度が15%アップ',プレゼントぷりん:'着地時、獲得コインと集客コインが1.2倍(オフライン無効)','クリスマスツリーちょこ&ぱん':'着地時、獲得コインと集客コインが1.2倍(オフライン無効)',クリスマスパーティーいちご:'着地時、獲得コインと集客コインが1.2倍(オフライン無効)',サンタぱんぴー:'所持時、クリスマスの卵の必要集客コイン-10%(同名の重複なし)',雪だるまゆきみ:'所持時、クリスマスの卵の必要集客コイン-10%(同名の重複なし)'});
+const effSp=p=>calc(p).sp,spd=p=>calc(p,p.pl?placed():placed().concat([p])).sp;
+function mk(c){const g=RG[c.r],lo={ER:.33,LR:.5,UR:.75}[c.r]||1;return{u:0,c:c.id,e:ri(...g[0]),a:ri(...g[1]),sp:Math.round((lo+Math.random()*(1-lo))*100)/100,pl:false}}
+function roll(t){let r=Math.random()*100,k;for(k in E[t].p){if((r-=E[t].p[k])<0)break}const L=C.filter(c=>c.r==k&&(c.ev||'')==(E[t].ev||''));return mk(L[ri(0,L.length-1)])}
+function jump(p,i,iv){const el=$('c'+i);if(!el)return;if(CFG.lv>=4){setTimeout(()=>land(p,i),Math.min(600,iv*.85)*.88);return}const ie=el.firstChild,du=Math.min(600,iv*.85);ie.style.animationDuration=du+'ms';ie.classList.remove('jp');void ie.offsetWidth;ie.classList.add('jp');const sh=el.querySelector('.sh');if(sh&&!CFG.lite){sh.style.animation='none';void sh.offsetWidth;sh.style.animation='sh '+du+'ms ease-in-out'}setTimeout(()=>land(p,i),du*.88)}
+let jl=Date.now();setInterval(()=>{const n=Date.now(),d=Math.min(n-jl,500);jl=n;if(MEA||CP)return;placed().slice(0,5).forEach((p,i)=>{p.acc=(p.acc||0)+d;const iv=effSp(p)*1000;if(p.acc>=iv){p.acc%=iv;jump(p,i,iv)}})},100);
+const K=n=>n>=1e4?(n/1e4).toFixed(1).replace('.0','')+'万':''+Math.floor(n);
+const Kp=n=>n>=1e4?K(n):n>=100?''+Math.floor(n):''+Math.round(n*10)/10;
+const tile=p=>{const k=calc(p,p.pl?placed():placed().concat([p]));return`<div class="tl">${ic(C[p.c])}<div class="sv">稼${Kp(k.e/k.sp)}/秒<br>客${Kp(k.a/k.sp)}/秒</div></div>`};
+let lpt,lpf=0,lu=0,lT=0,tmr,bsel=0;
+function lpS(u){lpf=0;clearTimeout(lpt);if(!CFG.quick)return;lpt=setTimeout(()=>{lpf=1;const p=P(u);if(!p)return;if(p.pl)return toast('すでに配置されています');if(placed().length>4)return toast('配置は最大5匹までです');const b=placed().length;tgl(u);if(placed().length>b)toast(C[p.c].n+'をカフェに配置しました')},500)}
+function lpE(){clearTimeout(lpt)}
+function itc(u){if(lpf){lpf=0;return}lsc=$('s1').scrollTop;pv=u;rp()}
+function ecost(e){return Math.ceil(e.v)}
+const nslot=t=>({t,ready:Date.now()+Math.max(0,E[t].h*36e5-urb()*3e5),pet:roll(t)});
+function eask(t){const e=E[t];M(`<div class="acq"><div class="acqn">${e.n}</div><div class="big" style="width:96px">${eggImg(t)}</div><div>${F(ecost(e))}${e.c=='coin'?'コイン':'集客コイン'}</div><div style="margin:8px 0">卵を購入しますか？</div><div class="bts"><button class="btn pri" onclick="cl();buy(${t})">はい</button><button class="btn" onclick="prob(${t})">確率を見る</button><button class="btn" onclick="cl()">いいえ</button></div></div>`)}
+function prob(t){const e=E[t];M(`<div class="acq"><div class="acqn">${e.n} 排出確率</div><div style="margin:8px 0">孵化時間: ${e.h}時間</div>${Object.entries(e.p).map(([k,v])=>`<div class="rw"><span style="color:${RC[k]}">${k}</span><span>${v}%</span></div>`).join('')}<div style="font-size:12px;margin:6px 0">同じレア度内のキャラが出る確率は均等です。</div><button class="btn" onclick="eask(${t})">戻る</button></div>`)}
+function buy(t){const e=E[t],i=S.slots.findIndex(x=>!x),c=ecost(e);if(S[e.c]<c)return toast('資金不足で購入できません');if(i<0)return toast('卵スロットが満杯です');S[e.c]-=c;S.slots[i]=nslot(t);if(e.ev){S.xt++;toast('イベントキャラ交換チケットを1枚獲得！ ('+S.xt+'/5)',3000)}re();bar();save()}
+function sk2(i){const s=S.slots[i];if(!s)return;const m0=Math.max(1,Math.ceil((s.ready-Date.now())/6e4));M(`<div class="acq"><div class="acqn">コインを消費してスキップしますか？</div><div style="margin:8px 0">2億コイン＝1分</div><input id="sl" type="range" min="1" max="${m0}" value="${m0}" style="width:100%" oninput="skv()"><div id="skt" style="margin:8px 0"></div><div class="bts"><button class="btn pri" onclick="skgo(${i})">スキップする</button><button class="btn" onclick="cl()">やめる</button><button class="btn" onclick="giveup(${i})">孵化を放棄</button></div></div>`);skv()}
+function giveup(i){ask('孵化を放棄しますか？\n(孵化は中断され、コインは戻りません)',()=>{S.slots[i]=null;cl();re();save()})}
+function skv(){const m=+$('sl').value;$('skt').innerHTML=`${m}分スキップ<br>必要コイン: ${F(m*2e8)}<br>所持: ${F(S.coin)}`}
+function skgo(i){const s=S.slots[i],m=+$('sl').value,c=m*2e8;if(!s)return cl();if(S.coin<c)return toast('コインが足りません');S.coin-=c;s.ready-=m*6e4;cl();re();bar();save()}
+function cnt(i){const s=S.slots[i];if(!s.cn){s.cn=1;S.hc[s.t]=(S.hc[s.t]||0)+1;chkM();save()}}
+const MS=[['ふつうの卵を孵化させる',()=>S.hc[0]>=1],['レアな卵を孵化させる',()=>S.hc[1]>=1],['スーパーレアな卵を孵化させる',()=>S.hc[2]>=1],['SSRキャラを獲得する',()=>S.gs>=1],['SSRキャラを3体獲得する',()=>S.gs>=3],['かがやく卵を孵化させる',()=>S.hc[3]>=1],['URキャラを獲得する',()=>S.gu>=1],['URキャラを3体獲得する',()=>S.gu>=3],['伝説の卵を孵化させる',()=>S.hc[4]>=1]];
+function chkM(){if(!S.mr&&MS.every(m=>m[1]())){S.mr=1;S.tk[0]++;S.tk[1]++;toast('ミッション全達成！無料チケットを獲得しました',4000)}}
+function msn(){M(`<div class="rw"><b>初心者パネルミッション</b><button class="btn" onclick="cl()">閉じる</button></div><div class="pg">${MS.map((m,i)=>`<div class="pnl${m[1]()?' ok':''}"><small>${i+1}</small>${m[0]}${m[1]()?'<i>✔</i>':''}</div>`).join('')}</div><div style="margin-top:8px;font-size:13px">全てクリアで「ハロウィン卵無料チケット」と「クリスマス卵無料チケット」を1枚ずつ獲得！${S.mr?'（獲得済み）':''}</div>`,'pm')}
+function useTk(k){if(S.tk[k]<1)return;const i=S.slots.findIndex(x=>!x);if(i<0)return toast('卵スロットが満杯です');S.tk[k]--;S.slots[i]=nslot(k?6:5);bag();re();save();toast('卵スロットに卵をセットしました')}
+function pinfo(u){bsel=bsel==u?0:u;bag()}
+function bag(k){const st=k?bsc:$('bx').scrollTop,sv=srt(),n=Object.keys(S.seen).length,si=sv.findIndex(p=>p.u==bsel),ei=si<0?-1:Math.min(sv.length-1,(Math.floor(si/5)+1)*5-1);let g='';
+ sv.forEach((p,i)=>{g+=`<div class="it" onpointerdown="bps(${p.u})" onpointerup="bpe()" onpointerleave="bpe()" onpointercancel="bpe()" oncontextmenu="return false" onclick="if(bpf){bpf=0;return}pinfo(${p.u})">${tile(p)}</div>`;if(i==ei){const q=sv[si];g+=`<div class="pn" style="grid-column:1/-1;margin:2px 0">${inf(q)}<button class="btn" onclick="ask('野生に放ちますか？',()=>{S.pets=S.pets.filter(x=>x.u!=${q.u});bsel=0;rc();bag();save()})">野生に放つ</button></div>`}});
+ M(`<div class="rw"><b>持ち物</b><button class="btn" onclick="cl()">閉じる</button></div><div class="rw"><span>コイン貯金箱 ${F(S.boxC)}</span><button class="btn" onclick="take('boxC','coin')">取り出す</button></div><div class="rw"><span>集客コイン貯金箱 ${F(S.boxK)}</span><button class="btn" onclick="take('boxK','cust')">取り出す</button></div><div style="font-size:12px;color:var(--cocoa)">所持数上限(9999兆)を越えて獲得したコインは貯金箱に入ります。</div>${TM?'':`<div class="rw"><span><img class="tk" src="halloweeneggchicket.png" onerror="this.remove()">ハロウィン卵無料チケット ×${S.tk[0]}</span><button class="btn" onclick="useTk(0)">使う</button></div><div class="rw"><span><img class="tk" src="christmaseggchicket.png" onerror="this.remove()">クリスマス卵無料チケット ×${S.tk[1]}</span><button class="btn" onclick="useTk(1)">使う</button></div><div class="rw"><span>イベントキャラ交換チケット ×${S.xt}（5枚で交換）</span></div><h3>卵 (${S.slots.filter(x=>x).length}/3)</h3><div>${S.slots.map(s=>s?E[s.t].n:'-').join(' / ')}</div>`}<h3>ペット ${S.pets.length}/${MAXB}</h3><div class="grid">${g}</div><h3>図鑑 ${n}/${C.length}</h3><div class="grid">${C.slice().sort((a,b)=>ORD.indexOf(a.r)-ORD.indexOf(b.r)||a.id-b.id).map(c=>`<div class="it" onclick="dex(${c.id})">${icS(c)}</div>`).join('')}</div>`);$('bx').scrollTop=st}
+function santa(p,i){const pl=placed().slice(0,5),iv=effSp(p)*1000;log('サンタぱんぴーが発動！プレゼントジャンプ！みんなが一斉にジャンプ！');pl.forEach((q,j)=>{if(q===p)return;q.acc=0;q.sx=1;jump(q,j,iv)})}
+function calc(p,pl,nw){pl=pl||placed();const c=C[p.c],n=c.n,ex=[],ax=[],st=[];let me=1,ma=1,sp=p.sp;
+ const uni=pl.length>0&&['h','x'].some(k=>pl.every(q=>C[q.c].ev==k)),sn=new Set();
+ pl.forEach(q=>{const m=C[q.c].n;if(!uni&&sn.has(m))return;sn.add(m);
+  const l=LE[m];if(l){if(l[0]=='e'){me*=l[1];ex.push([m,l[1]])}else{ma*=l[1];ax.push([m,l[1]])}}
+  if(m=='亡霊くるみ'&&c.ev=='h'){me*=1.5;ma*=1.5;ex.push([m,1.5]);ax.push([m,1.5])}
+  if(HW.includes(m)){sp/=1.15;st.push([m,'÷1.15'])}
+  if(m=='かのん'&&c.r!='ER'){sp/=1.2;st.push([m,'÷1.2'])}
+  if(m=='かぼちゃぱん'&&c.ev=='h'){sp/=1.25;st.push([m,'÷1.25'])}
+  if(m=='雪だるまゆきみ'){sp*=2;st.push([m,'×2(速度-50%)'])}});
+ if(n=='コウモリれもん'){sp*=4;st.push(['自身の速度-300%','×4'])}
+ if(!nw){const w=pl.find(q=>C[q.c].n=='イチゴツリー わたげ');if(w){let f=null,fs=0;pl.forEach(q=>{if(q===w)return;const v=calc(q,pl,1).sp;if(!f||v<fs){f=q;fs=v}});if(p===w||p===f){sp*=1.25;st.push(['イチゴツリー わたげ(速度-20%)','×1.25'])}}}
+ if(n=='雪だるまゆきみ'){ma*=1.2;ax.push(['自身の集客',1.2])}
+ return{e:p.e*me,a:p.a*ma,sp,me,ma,ex,ax,st}}
+const mf=n=>''+Math.round(n*1000)/1000,fx=n=>n>=1e4?F(n):''+Math.round(n*100)/100,fh=h=>h>=1?Math.floor(h)+'時間'+Math.floor(h%1*60)+'分':Math.max(0,Math.floor(h*60))+'分';
+const LND=c=>{const n=c.n,r=[];if(XM.has(n))r.push(['着地時 コインと集客×1.2',1,1.2,1.2]);if(n=='コウモリちょこ')r.push(['25%で稼ぎ×2',.25,2,1]);if(n=='おばけぷりん')r.push(['25%で集客×2',.25,1,2]);if(n=='野菜いっぱいぱんぴー&かのん')r.push(['20%で集客×2',.2,1,2]);if(n=='コウモリれもん')r.push(['100%で稼ぎ・集客×3',1,3,3]);if(n=='サンタぱんぴー')r.push(['50%で全員が一斉ジャンプ(各自の集客×1.5のコインを追加獲得)',.5,1,1]);return r};
+function calcV(){const pl=placed().slice(0,5);let te=0,ta=0,h='';
+ const li=a=>a.length?'('+a.map(([n,v])=>n+'×'+v).join(' ')+')':'';
+ pl.forEach(p=>{const c=C[p.c],k=calc(p,pl),ln=LND(c);let xe=1,xa=1;ln.forEach(([,pr,m1,m2])=>{xe*=1+pr*(m1-1);xa*=1+pr*(m2-1)});te+=k.e/k.sp;ta+=k.a/k.sp;
+  h+=`<div class="pn fm"><b>${c.n}</b> <span style="color:${RC[c.r]}">${c.r}</span><br>稼ぎ：${fx(p.e)} × 倍率${mf(k.me)}${li(k.ex)} ＝ <b>${fx(k.e)}</b>/回<br>集客：${fx(p.a)} × 倍率${mf(k.ma)}${li(k.ax)} ＝ <b>${fx(k.a)}</b>/回<br>速度：基礎${p.sp.toFixed(2)}秒${k.st.map(([n,o])=>' '+o+'('+n+')').join('')} ＝ <b>${k.sp.toFixed(2)}</b>秒/回<br>毎秒：稼ぎ ${fx(k.e/k.sp)} ／ 集客 ${fx(k.a/k.sp)}<br>${ln.length?`着地時効果：${ln.map(x=>x[0]).join('、')}<br>期待値(1回): 稼ぎ ${fx(k.e*xe)} ／ 集客 ${fx(k.a*xa)}<br>`:''}</div>`});
+ M(`<div class="rw"><b>計算式</b><span><button class="btn" onclick="setm()">戻る</button><button class="btn" onclick="cl()">閉じる</button></span></div><div class="pn fm"><b>基本の式</b><br>1回の稼ぎ ＝ 基礎の稼ぎ力 × 稼ぎ倍率<br>1回の集客 ＝ 基礎の集客力 × 集客倍率<br>速度(秒/回) ＝ 基礎速度 ×(間隔が伸びる効果) ÷ 速度アップ<br>毎秒 ＝ 1回の値 ÷ 速度(秒)<br>・倍率や速度アップは、複数あるとすべて掛け算です<br>・着地時の確率効果は、発動した回だけ乗ります(期待値＝確率で平均した値)<br>・オフライン中は毎秒の20%で計算されます(着地時の効果は期待値で反映)<br>・同じキャラの効果は、配置がすべてハロウィンキャラ、またはすべてクリスマスキャラのときだけ重複します</div><h3>今の配置の計算</h3>${pl.length?h+`<div class="pn fm"><b>合計(毎秒)</b><br>稼ぎ ${F(te)} ／ 集客 ${F(ta)}<br>カフェ画面の合計と同じ値です(確率効果は含みません)</div>`:'<div class="pn fm">配置中のペットがいません。配置すると、ここに計算結果が表示されます。</div>'}`)}
+Object.assign(EF,{サンタぱんぴー:'【プレゼントジャンプ】着地時、50%の確率で、配置キャラ全員がサンタぱんぴーの速度基準で一斉にジャンプ。画面の後ろからプレゼントが飛び出し、一斉着地時に、本来得る集客コインの1.5倍のコインを獲得／1体まで配置可',雪だるまゆきみ:'【ゆきのしずけさ】配置時、配置キャラ全員(自身含む)の速度が-50%(間隔が2倍)。さらに自身の集客力が1.2倍／1体まで配置可','イチゴツリー わたげ':'【雪降り】自身が1000回着地するごとに、30秒間「雪降り」状態に入る。この間、着地時の効果が2倍になる。オフラインでも発動する／1体まで配置可'});
+Object.assign(EF,{'イチゴツリー わたげ':'【雪降り】配置時、配置キャラの中で一番速度が高いキャラと自身の速度が20%遅くなる(間隔が1.25倍)。配置キャラ全員の着地回数が合計1000回になるごとに、30秒間「雪降り」状態に入る。この間、着地時の効果が2倍になる。オフラインでも発動する／1体まで配置可',プレゼントぷりん:'着地時、獲得コインと集客コインが1.2倍',クリスマスパーティーいちご:'着地時、獲得コインと集客コインが1.2倍','クリスマスツリーちょこ&ぱん':'着地時、獲得コインと集客コインが1.2倍'});
+/* ================= 検証用モード ================= */
+function setMode(t){ask(t?'検証用モードに切り替えます。\n(通常モードのデータとは別に保存されます)':'通常モードに戻ります。',()=>{save();try{t?localStorage.setItem('pc_mode','test'):localStorage.removeItem('pc_mode')}catch(e){}location.reload()})}
+function tmInit(){const b=document.querySelector('#tabs button');b.innerHTML='ステータス<br>選択';b.style.lineHeight='1.3';$('msnb').style.display='none';$('meab').style.display='';$('cpb').style.display=''}
+
+/* ---------- ペットステータス選択 ---------- */
+let TS=[],TF='ER';
+const TLo=c=>({ER:.33,LR:.5,UR:.75}[c.r]||1);
+function tsPre(c,k){const g=RG[c.r],lo=TLo(c);if(k=='min')return{e:g[0][0],a:g[1][0],sp:1};if(k=='rnd')return{e:ri(...g[0]),a:ri(...g[1]),sp:Math.round((lo+Math.random()*(1-lo))*100)/100};return{e:g[0][1],a:g[1][1],sp:lo}}
+function tsTog(id){const i=TS.findIndex(x=>x.id==id);if(i>=0)TS.splice(i,1);else TS.push(Object.assign({id,n:1},tsPre(C[id],'max')));rs()}
+function tsAll(on){C.filter(c=>c.r==TF).forEach(c=>{const i=TS.findIndex(x=>x.id==c.id);if(on&&i<0)TS.push(Object.assign({id:c.id,n:1},tsPre(c,'max')));if(!on&&i>=0)TS.splice(i,1)});rs()}
+function tsF(r){TF=r;rs()}
+function tsV(id,k,v){const x=TS.find(x=>x.id==id);if(x)x[k]=v}
+function tsN(id,d){const x=TS.find(x=>x.id==id);if(x){x.n=Math.min(20,Math.max(1,(+x.n||1)+d));rs()}}
+function tsP(k){TS.forEach(x=>Object.assign(x,tsPre(C[x.id],k)));rs()}
+function tsClr(){TS=[];rs()}
+function canPl(p){const n=C[p.c].n,pl=placed();if(pl.length>=5)return false;const k=pl.filter(q=>C[q.c].n==n).length;return!(ONE.has(n)&&k>=1)&&k<2}
+function tsGet(){if(!TS.length)return toast('ペットを選択してください');
+ let tot=0,fix=0;const L=[];
+ for(const x of TS){const c=C[x.id],e=Math.floor(+x.e),a=Math.floor(+x.a),sp=+x.sp,n=Math.min(20,Math.max(1,Math.floor(+x.n)||1));
+  if(x.e===''||x.a===''||!isFinite(e)||!isFinite(a)||e<0||a<0)return toast(c.n+'の稼ぎ／集客を正しく入力してください');
+  if(x.sp===''||!(sp>0))return toast(c.n+'の速度を正しく入力してください');
+  const s2=Math.round(Math.min(1,Math.max(.33,sp))*100)/100;if(s2!=sp)fix=1;
+  L.push({c,e:Math.min(e,CAP),a:Math.min(a,CAP),sp:s2,n});tot+=n}
+ if(S.pets.length+tot>MAXB)return toast('バッグの上限('+MAXB+'体)を超えます');
+ let pc=0;L.forEach(o=>{for(let k=0;k<o.n;k++){const p=give({u:0,c:o.c.id,e:o.e,a:o.a,sp:o.sp,pl:false});if(CFG.ap&&canPl(p)){p.pl=true;pc++}}});
+ rc();bar();save();rs();toast(tot+'体を入手しました'+(pc?'（'+pc+'体をカフェに配置）':'')+(fix?'\n※速度は0.33〜1.00に補正しました':''),3500)}
+function tsDel(){ask('所持ペットを全て削除しますか？\n(カフェの配置も解除されます)',()=>{S.pets=[];pv=null;bsel=0;rc();bar();save();rs();toast('全て削除しました')})}
+function rs(){const el=$('s2'),st=el.scrollTop,list=C.filter(c=>c.r==TF).sort((a,b)=>a.id-b.id),tot=TS.reduce((t,x)=>t+Math.min(20,Math.max(1,Math.floor(+x.n)||1)),0);
+ let h=`<div class="tsh"><b>ペットステータス選択</b><div class="tsc">${ORD.map(r=>{const n=TS.filter(x=>C[x.id].r==r).length;return`<button class="btn${TF==r?' pri':''}" onclick="tsF('${r}')">${r}${n?'('+n+')':''}</button>`}).join('')}</div></div>`;
+ h+=`<div class="rw"><span style="font-size:12px;color:var(--cocoa)">${TF}：全${list.length}種（タップで選択／複数可）</span><span><button class="btn" style="font-size:12px;padding:4px 10px" onclick="tsAll(1)">全選択</button><button class="btn" style="font-size:12px;padding:4px 10px" onclick="tsAll(0)">全解除</button></span></div>`;
+ h+=`<div class="tsg">${list.map(c=>{const s=TS.some(x=>x.id==c.id);return`<div class="it${s?' sel':''}" onclick="tsTog(${c.id})">${ic(c)}<div class="nm">${c.n}</div></div>`}).join('')}</div>`;
+ h+=`<h3 style="color:var(--cocoa)">ステータス設定</h3>`;
+ if(!TS.length)h+=`<div class="pn" style="text-align:center;color:var(--cocoa)">上のキャラをタップして選択してください</div>`;
+ else{h+=`<div class="rw"><span style="font-size:12px;color:var(--cocoa)">一括設定</span><span><button class="btn" style="font-size:12px;padding:4px 10px" onclick="tsP('max')">最大</button><button class="btn" style="font-size:12px;padding:4px 10px" onclick="tsP('min')">最小</button><button class="btn" style="font-size:12px;padding:4px 10px" onclick="tsP('rnd')">ランダム</button></span></div>`;
+  TS.forEach(x=>{const c=C[x.id],g=RG[c.r],lo=TLo(c);
+   h+=`<div class="tse"><div class="tsr"><div class="mi">${ic(c)}</div><div class="tsn"><b>${c.n}</b> <span class="rbs" style="background:${RC[c.r]}">${c.r}</span></div><button class="btn" style="margin:0;padding:4px 10px" onclick="tsTog(${c.id})">✕</button></div>
+<div class="tsf"><label>稼ぎ力<input type="number" inputmode="numeric" min="0" step="1" value="${x.e}" oninput="tsV(${c.id},'e',this.value)"><small>${F(g[0][0])}〜${F(g[0][1])}</small></label><label>集客力<input type="number" inputmode="numeric" min="0" step="1" value="${x.a}" oninput="tsV(${c.id},'a',this.value)"><small>${F(g[1][0])}〜${F(g[1][1])}</small></label><label>速度(秒/回)<input type="number" inputmode="decimal" min="0.33" max="1" step="0.01" value="${x.sp}" oninput="tsV(${c.id},'sp',this.value)"><small>${lo.toFixed(2)}〜1.00 小さいほど速い</small></label></div>
+<div class="stp">体数<button onclick="tsN(${c.id},-1)">−</button><b>${x.n}</b><button onclick="tsN(${c.id},1)">＋</button></div></div>`})}
+ h+=`<div class="tsb"><div class="rw" style="margin:0 0 6px"><span style="font-size:13px">選択中 ${TS.length}種 ／ 合計 ${tot}体</span><label style="font-size:12px;display:flex;align-items:center;gap:4px"><input type="checkbox" ${CFG.ap?'checked':''} onchange="CFG.ap=this.checked?1:0;scfg()">入手時にカフェへ自動配置</label></div><div class="bts"><button class="btn pri" onclick="tsGet()">入手する</button><button class="btn" onclick="tsClr()">選択クリア</button><button class="btn" onclick="tsDel()">ペット全削除</button></div></div>`;
+ el.innerHTML=h;el.scrollTop=st}
+
+/* ---------- 計測シミュレーション ---------- */
+const MDU=iv=>Math.min(600,iv*.85);
+function simNew(pl,off){const o=pl.map((p,i)=>{const c=C[p.c];return{i,p,c,k:calc(p,pl),ln:LND(c),acc:0,sx:0,e:0,a:0,n:0,nn:0,last:null,mi:Infinity,me:0,ma:0}});
+ return{t:0,off,o,q:[],w:pl.findIndex(p=>C[p.c].n=='イチゴツリー わたげ'),ld:0,sn:0,sa:o.reduce((t,x)=>t+x.k.a,0)}}
+function simLand(s,i,t){const x=s.o[i],c=x.c,k=x.k,n=c.n,sm=(s.w>=0&&s.sn>t)?2:1,B=m=>1+(m-1)*sm;
+ let e=k.e,a=k.a,sb=!!x.sx;const r=Math.random();x.sx=0;
+ if(XM.has(n)){e*=B(1.2);a*=B(1.2)}
+ if(n=='コウモリちょこ'&&r<.25)e*=B(2);
+ if(n=='おばけぷりん'&&r<.25)a*=B(2);
+ if(n=='サンタぱんぴー'&&Math.random()<.5){const iv=k.sp*1000;s.o.forEach(y=>{if(y===x)return;y.acc=0;y.sx=1;s.q.push({t:t+MDU(iv)*.88,i:y.i})});sb=true}
+ if(n=='野菜いっぱいぱんぴー&かのん'&&Math.random()<.2)a*=B(2);
+ if(n=='コウモリれもん'){e*=B(3);a*=B(3)}
+ if(s.w>=0){s.ld++;if(s.ld%1000==0)s.sn=t+3e4}
+ if(sb)e+=a*1.5*sm;
+ x.e+=e;x.a+=a;x.n++;if(x.last!=null){const d=t-x.last;if(d<x.mi)x.mi=d}x.last=t;if(e>x.me)x.me=e;if(a>x.ma)x.ma=a}
+function simOff(s,dt){const t0=s.t,t1=t0+dt;let N=0;s.o.forEach(x=>{x.nn=dt/(x.k.sp*5e3);N+=x.nn});let f=0;
+ if(s.w>=0){const l0=s.ld,l1=l0+N,tr=Math.floor(l1/1e3)-Math.floor(l0/1e3);let un=Math.max(0,Math.min(t1,s.sn)-t0);
+  if(tr>0){const tc=t0+(Math.floor(l1/1e3)*1e3-l0)/N*dt;un=s.sn>=tc?dt:un+(t1-tc);s.sn=tc+3e4}
+  s.ld=l1;f=un/dt}
+ s.o.forEach(x=>{let xe=1,xa=1,se=1,sa=1;x.ln.forEach(([,pr,m1,m2])=>{xe*=1+pr*(m1-1);xa*=1+pr*(m2-1);se*=1+pr*(m1-1)*2;sa*=1+pr*(m2-1)*2});
+  x.e+=x.k.e*((1-f)*xe+f*se)*x.nn;x.a+=x.k.a*((1-f)*xa+f*sa)*x.nn;x.n+=x.nn;
+  x.me=Math.max(x.me,x.k.e*(f>0?se:xe));x.ma=Math.max(x.ma,x.k.a*(f>0?sa:xa))});
+ s.o.forEach(x=>{if(x.c.n=='サンタぱんぴー'){const b=x.nn*.5*1.5*(1+f);s.o.forEach(y=>{y.e+=b*y.k.a})}})}
+function simStep(s){const T=s.t+100;
+ if(s.off){simOff(s,100);s.t=T;return}
+ for(;;){let j=-1;s.q.forEach((e,u)=>{if(e.t<=T&&(j<0||e.t<s.q[j].t))j=u});if(j<0)break;const e=s.q.splice(j,1)[0];simLand(s,e.i,e.t)}
+ s.o.forEach(x=>{x.acc+=100;const iv=x.k.sp*1000;if(x.acc>=iv){x.acc%=iv;s.q.push({t:T+MDU(iv)*.88,i:x.i})}});
+ s.t=T}
+function simSum(s){let e=0,a=0,n=0,me=0,ma=0,mei=-1,mai=-1,mi=Infinity,mii=-1,th=Infinity;
+ s.o.forEach((x,i)=>{e+=x.e;a+=x.a;n+=x.n;if(x.me>me){me=x.me;mei=i}if(x.ma>ma){ma=x.ma;mai=i}const v=s.off?x.k.sp*5e3:x.mi;if(v<mi){mi=v;mii=i}th=Math.min(th,x.k.sp*(s.off?5:1)*1e3)});
+ return{e,a,n,me,ma,mei,mai,mi,mii,th}}
+
+/* ---------- 計測UI ---------- */
+const mm=ms=>{const s=Math.max(0,Math.ceil(ms/1e3));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
+let MR=null;
+function meaLabels(pl){const cnt={},idx={};pl.forEach(p=>cnt[C[p.c].n]=(cnt[C[p.c].n]||0)+1);return pl.map(p=>{const n=C[p.c].n;idx[n]=(idx[n]||0)+1;return cnt[n]>1?n+' #'+idx[n]:n})}
+function meaSet(k,v){CFG[k]=v;scfg();meaSetup()}
+function meaX(v){CFG.mx=+v;scfg();$('mxv').textContent=v;meaEst()}
+function meaEst(){$('mest').textContent='実時間の目安：約 '+mm(CFG.md*6e4/CFG.mx)+'（'+CFG.md+'分 ÷ '+CFG.mx+'倍速）'}
+function meaSetup(){const pl=placed().slice(0,5);if(!pl.length)return toast('カフェにペットが配置されていません');const L=meaLabels(pl);
+ M(`<div class="rw"><b>計測</b><button class="btn" onclick="cl()">閉じる</button></div>
+<div class="pn fm"><b>計測対象（カフェ配置中）</b><div class="mpl" style="margin-top:6px">${pl.map(p=>`<div class="mi">${ic(C[p.c])}</div>`).join('')}</div><div style="font-size:11.5px;margin-top:4px">${L.join(' ／ ')}</div></div>
+<h3>計測時間</h3><div class="sg">${[1,3,10].map(d=>`<button class="btn${CFG.md==d?' pri':''}" onclick="meaSet('md',${d})">${d}分計測</button>`).join('')}</div>
+<h3>想定</h3><div class="sg"><button class="btn${CFG.mo?'':' pri'}" onclick="meaSet('mo',0)">オンライン想定</button><button class="btn${CFG.mo?' pri':''}" onclick="meaSet('mo',1)">オフライン想定</button></div>
+<div style="font-size:11.5px;margin-top:4px;color:var(--cocoa)">${CFG.mo?'オフライン：着地間隔は5倍、効果は期待値で計算（着地回数は小数になります）':'オンライン：実際の着地・確率効果を再現してシミュレーションします'}</div>
+<h3>計測速度 ×<span id="mxv">${CFG.mx}</span></h3><div class="mx"><span style="font-size:12px">2</span><input type="range" min="2" max="50" step="1" value="${CFG.mx}" oninput="meaX(this.value)"><span style="font-size:12px">50</span></div>
+<div class="mcp">${[2,5,10,20,50].map(n=>`<button class="btn${CFG.mx==n?' pri':''}" onclick="meaSet('mx',${n})">×${n}</button>`).join('')}</div>
+<div id="mest" style="font-size:12.5px;margin:8px 0;color:var(--cocoa)"></div>
+<div style="font-size:11px;color:var(--cocoa);margin-bottom:6px">※計測は別計算で行うため、所持コインや現在のペット状態には影響しません。イチゴツリー わたげの着地カウントは0から始まります。</div>
+<div class="bts"><button class="btn pri" onclick="meaGo()">計測開始</button><button class="btn" onclick="cl()">やめる</button></div>`);meaEst()}
+function meaGo(){if(MEA)return;const pl=placed().slice(0,5);if(!pl.length)return toast('カフェにペットが配置されていません');
+ MEA={s:simNew(pl,!!CFG.mo),dur:CFG.md*6e4,x:CFG.mx,off:!!CFG.mo,t0:performance.now(),lb:meaLabels(pl)};
+ M(`<div class="rw"><b>計測中…</b></div><div class="pn fm">${CFG.md}分計測 ／ ${CFG.mo?'オフライン':'オンライン'}想定 ／ ×${CFG.mx}倍速<br>カフェの演出は停止し、別計算でシミュレーションしています。</div>
+<div class="g" style="height:14px;margin:10px 0"><i id="mpb" style="width:0%"></i></div><div id="mtx" style="font-size:13px;text-align:center"></div>
+<div class="pn fm" style="margin-top:10px">合計コイン：<b id="mco">0</b><br>合計集客コイン：<b id="mcu">0</b><br>着地回数：<b id="mnn">0</b></div>
+<div class="bts"><button class="btn" onclick="meaStop()">中止</button></div>`);
+ MEA.iv=setInterval(meaTick,50);meaTick()}
+function meaStop(){if(MEA){clearInterval(MEA.iv);MEA=null}cl()}
+function meaTick(){const m=MEA;if(!m)return;const tg=Math.min(m.dur,(performance.now()-m.t0)*m.x),lim=performance.now()+30;
+ while(m.s.t+100<=tg+1e-6&&performance.now()<lim)simStep(m.s);
+ const t=m.s.t,r=simSum(m.s);
+ if($('mpb')){$('mpb').style.width=(t/m.dur*100)+'%';$('mtx').textContent='計測 '+mm(t)+' / '+mm(m.dur)+'　（残り実時間 約'+mm((m.dur-t)/m.x)+'）';$('mco').textContent=fx(r.e);$('mcu').textContent=fx(r.a);$('mnn').textContent=Math.round(r.n*10)/10}
+ if(t>=m.dur-1e-6)meaDone()}
+function meaDone(){const m=MEA;if(!m)return;clearInterval(m.iv);MEA=null;
+ MR={md:m.dur/6e4,off:m.off,x:m.x,dur:m.dur,lb:m.lb,r:simSum(m.s),o:m.s.o.map(x=>({c:x.c,e:x.e,a:x.a,n:x.n,sp:x.k.sp}))};meaShow()}
+function meaShow(){const m=MR,r=m.r,o=m.o,sec=m.dur/1e3,L=m.lb,nm=i=>i<0?'':'（'+L[i]+'）';
+ const row=(k,v)=>`<div class="kv"><span>${k}</span><span>${v}</span></div>`;
+ const ls=(t,key,tot)=>`<h3>${t}</h3>`+o.map((x,i)=>[x,i]).sort((u,w)=>w[0][key]-u[0][key]).map(([x,i])=>{const v=x[key],p=tot>0?v/tot*100:0;return`<div class="rs-r"><div class="mi">${ic(x.c)}</div><div class="bd"><div style="font-size:12.5px">${L[i]} <span style="color:${RC[x.c.r]}">${x.c.r}</span></div><div class="g"><i style="width:${p.toFixed(1)}%"></i></div></div><div class="v">${fx(v)}<br><span style="font-size:11px;font-weight:400">${p.toFixed(1)}%</span></div></div>`}).join('');
+ const mi=r.mi==Infinity?'-':(r.mi/1e3).toFixed(3)+'秒'+(m.off?'':nm(r.mii));
+ M(`<div class="rw"><b style="font-size:17px">計測終了</b><button class="btn" onclick="cl()">閉じる</button></div>
+<div class="pn fm">${m.md}分計測 ／ ${m.off?'オフライン':'オンライン'}想定 ／ ×${m.x}倍速</div>
+${row('合計コイン',fx(r.e))}${row('合計集客コイン',fx(r.a))}${row('毎秒のコイン',fx(r.e/sec)+'/秒')}${row('毎秒の集客コイン',fx(r.a/sec)+'/秒')}
+${row('最短速度（着地間隔）',mi)}${row('　設定上の最短速度（理論値）',(r.th/1e3).toFixed(3)+'秒/回')}
+${row('着地回数',(m.off?Math.round(r.n*10)/10+'回（期待値）':r.n+'回'))}
+${row('1回での最大コイン',fx(r.me)+nm(r.mei))}${row('1回での最大集客コイン',fx(r.ma)+nm(r.mai))}
+${ls('キャラ別 獲得コイン（多い順）','e',r.e)}${ls('キャラ別 獲得集客コイン（多い順）','a',r.a)}
+<h3>キャラ別 着地回数</h3>${o.map((x,i)=>row(L[i],m.off?Math.round(x.n*10)/10+'回':x.n+'回')).join('')}
+${m.off?'<div style="font-size:11px;color:var(--cocoa);margin-top:6px">※オフライン想定は期待値計算です。最短速度は通常の5倍の間隔、最大値は期待値(1回あたり)です。</div>':'<div style="font-size:11px;color:var(--cocoa);margin-top:6px">※最短速度は、同じキャラの連続した着地の間隔の最小値です。</div>'}
+<div class="bts" style="margin-top:10px"><button class="btn pri" onclick="meaGo()">もう一度計測</button><button class="btn" onclick="meaCopy()">結果をコピー</button></div>`);$('bx').scrollTop=0}
+function meaCopy(){const m=MR;if(!m)return;const r=m.r,sec=m.dur/1e3,L=m.lb,nm=i=>i<0?'':'('+L[i]+')',p=v=>Math.round(v*100)/100;
+ const t=['【計測結果】'+m.md+'分計測／'+(m.off?'オフライン':'オンライン')+'想定／×'+m.x+'倍速',
+ '合計コイン: '+p(r.e)+'　合計集客コイン: '+p(r.a),'毎秒コイン: '+p(r.e/sec)+'　毎秒集客コイン: '+p(r.a/sec),
+ '最短速度: '+(r.mi==Infinity?'-':(r.mi/1e3).toFixed(3)+'秒')+'　設定上の最短: '+(r.th/1e3).toFixed(3)+'秒','着地回数: '+p(r.n),
+ '1回最大コイン: '+p(r.me)+nm(r.mei)+'　1回最大集客: '+p(r.ma)+nm(r.mai),'--- キャラ別（コイン / 集客コイン / 着地回数）---'].concat(m.o.map((x,i)=>L[i]+'('+x.c.r+'): '+p(x.e)+' / '+p(x.a)+' / '+p(x.n))).join('\n');
+ try{navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.append(a);a.select();document.execCommand('copy');a.remove()}toast('コピーしました')}
+
+const LVT={1:'軽量化なし（すべての演出）',2:'演出の粒を減らし、雪・ぽふっ・紙吹雪を控えめにします',3:'従来の軽量版（特殊演出なし）',4:'3 + ジャンプの動きもなし',5:'4 + 獲得コイン表示もなし（最軽量）'};
+function applyLv(){const l=Math.min(5,Math.max(1,+CFG.lv||1)),a=$('app');CFG.lv=l;CFG.lite=l>=3?1:0;a.classList.toggle('lite',l>=3);a.classList.toggle('lv2',l==2);a.classList.toggle('lv4',l>=4);a.classList.toggle('lv5',l==5)}
+function setLv(v){CFG.lv=+v;applyLv();scfg();if($('lvn'))$('lvn').textContent=CFG.lv;if($('lvt'))$('lvt').textContent=LVT[CFG.lv]}
+function tglD(u){const p=P(u);if(!p)return;const b=p.pl;tgl(u);const q=P(u);if(q&&q.pl!=b){pv=null;rp()}}
+function cafeStop(){CP=CP?0:1;$('cpb').innerHTML=CP?'<span class="fb" style="background:var(--rose);color:#fff">カフェ<br>再開</span>':'<span class="fb">カフェ<br>停止</span>';toast(CP?'カフェを停止しました（ジャンプ・獲得が止まります）':'カフェを再開しました')}
+S=load();{const n=Date.now(),ms=n-S.last;if(TM){}else if(ms<0)cheatMsg='端末時刻が保存時刻より過去です。放置報酬は付与されません。';else if(ms>3000)off(ms)}
+if(!S.pets.length)live(0);if(TM)tmInit();rc();rend();setTimeout(()=>{$('ld').classList.remove('on');if(cheatMsg)toast(cheatMsg,5000);if(!CFG.tut&&!TM)setTimeout(()=>tut(0),500)},700);save();
+
+/* ===== スマホ操作性の修正(JS) ===== */
+['gesturestart','gesturechange','gestureend'].forEach(e=>document.addEventListener(e,ev=>ev.preventDefault(),{passive:false}));
+document.addEventListener('dragstart',e=>{if(e.target&&e.target.tagName==='IMG')e.preventDefault()},true);
+document.addEventListener('selectstart',e=>{const t=e.target;if(!(t&&t.closest&&t.closest('input,textarea')))e.preventDefault()},true);
+document.addEventListener('contextmenu',e=>{const t=e.target;if(!(t&&t.closest&&t.closest('input,textarea')))e.preventDefault()},true);
+</script></body></html>
