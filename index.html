@@ -342,7 +342,7 @@ img{-webkit-user-drag:none;user-drag:none;-webkit-touch-callout:none}
 </style></head><body><div id="app">
 <div id="top"></div><div id="svw" onclick="setm()"></div>
 <div id="main"><section id="s2" class="scr"></section><section id="s0" class="scr on"><div class="bx" id="sum"></div><div id="stage"><div id="row"></div></div><div id="log"><b>特殊効果ログ</b><div id="lg"></div></div><div id="fxs"></div><div id="fxl"></div></section><section id="s1" class="scr"></section><section id="s3" class="scr"></section><section id="s4" class="scr"></section>
-<div id="side"><button class="sb" onclick="setm()"><img src="settings.png" alt="設定" onerror="this.outerHTML='<span class=fb>設定</span>'"></button><button class="sb" id="bagb" onclick="bag()"><img src="bag.png" alt="持ち物" onerror="this.outerHTML='<span class=fb>持ち物</span>'"></button><button class="sb" id="msnb" onclick="msn()"><img src="panelmission.png" alt="ミッション" onerror="this.outerHTML='<span class=fb>ミッ<br>ション</span>'"></button><button class="sb" id="exb" onclick="exOpen()"><span class="fb">交換</span></button><button class="sb" id="meab" onclick="meaSetup()" style="display:none"><span class="fb">計測</span></button><button class="sb" id="cpb" onclick="cafeStop()" style="display:none"><span class="fb">カフェ<br>停止</span></button></div></div>
+<div id="side"><button class="sb" onclick="setm()"><img src="settings.png" alt="設定" onerror="this.outerHTML='<span class=fb>設定</span>'"></button><button class="sb" id="bagb" onclick="bag()"><img src="bag.png" alt="持ち物" onerror="this.outerHTML='<span class=fb>持ち物</span>'"></button><button class="sb" id="msnb" onclick="msn()"><img src="panelmission.png" alt="ミッション" onerror="this.outerHTML='<span class=fb>ミッ<br>ション</span>'"></button><button class="sb" id="exb" onclick="cmOpen()"><span class="fb">通信</span></button><button class="sb" id="meab" onclick="meaSetup()" style="display:none"><span class="fb">計測</span></button><button class="sb" id="cpb" onclick="cafeStop()" style="display:none"><span class="fb">カフェ<br>停止</span></button></div></div>
 <nav id="tabs"><button onclick="go(2)"><img src="egg_menu.png" alt="卵管理" onerror="this.outerHTML='卵管理'"></button><button onclick="go(0)"><img src="cafe_menu.png" alt="カフェ" onerror="this.outerHTML='カフェ'"></button><button onclick="go(1)"><img src="pet_menu.png" alt="ペット管理" onerror="this.outerHTML='ペット管理'"></button><button id="wtab" onclick="go(3)" style="display:none"><img src="weapon_menu.png" alt="武器管理" onerror="this.outerHTML='武器管理'"></button></nav>
 <div id="ov" class="ov"><div class="box" id="bx"></div></div><div id="ov2" class="ov" style="z-index:30"><div class="box" id="bx2"></div></div>
 <div id="ld" class="ov on" style="z-index:50"><div class="ldt"><span style="--k:0">ロ</span><span style="--k:1">ー</span><span style="--k:2">ド</span><span style="--k:3">中</span><span style="--k:4">…</span></div><div class="ldd"><i></i><i></i><i></i></div></div><div id="toast"></div></div>
@@ -588,12 +588,13 @@ function bps(u){bpf=0;clearTimeout(bpt);if(!CFG.quick)return;bpt=setTimeout(()=>
 function bpe(){clearTimeout(bpt)}
 function relz(u){S.pets=S.pets.filter(x=>x.u!=u);bsel=0;rc();bag();save()}
 const TUT=[
-['カフェ画面',`ペットをカフェに配置すると、自動でジャンプしてコインと集客コインを稼ぎます。<br>・配置できるのは最大5匹。同じキャラは2体まで配置できます（サンタぱんぴー・かぼちゃぱん・雪だるまゆきみ・亡霊くるみ・イチゴツリー わたげは1体まで）<br>・同じキャラの効果が重複するのは、配置がすべてハロウィンキャラ、またはすべてクリスマスキャラで統一されているときだけです<br>・画面右上の「設定」「持ち物」「ミッション」ボタンから各機能を開けます（ミッションはカフェ画面のみ）`],
+['カフェ画面',`ペットをカフェに配置すると、自動でジャンプしてコインと集客コインを稼ぎます。<br>・配置できるのは最大5匹。同じキャラは2体まで配置できます（サンタぱんぴー・かぼちゃぱん・雪だるまゆきみ・亡霊くるみ・イチゴツリー わたげは1体まで）<br>・同じキャラの効果が重複するのは、配置がすべてハロウィンキャラ、またはすべてクリスマスキャラで統一されているときだけです<br>・画面右上の「設定」「持ち物」「ミッション」ボタンから各機能を開けます（ミッションはカフェ画面のみ）<br>・カフェを連打すると、UR以下のキャラの速度が3倍になります。LR・ERは、連打中に着地すると、獲得コインと集客コインが2倍になります（連打中はタップ音が変わります）`],
 ['卵管理画面',`コインや集客コインで卵を買うと、卵スロット(3つ)で孵化が始まります。<br>・卵をタップすると購入確認が出ます（「確率を見る」で排出確率を確認できます）<br>・孵化が終わったらスロットをタップして、ペットを獲得しましょう<br>・獲得したペットは「バッグに入れる」か「野生に放つ」を選べます<br>・イベントの卵（ハロウィン／クリスマス）を買うと「イベントキャラ交換チケット」が1枚もらえます。5枚集めると、卵管理画面の「イベントキャラ交換」ボタンから好きなイベントキャラと交換できます`],
 ['ペット管理画面',`持っているペットの一覧です。<br>・ペットをタップすると、すぐに詳細が開きます。「カフェに配置する」で配置できます<br>・長押しすると、詳細を開かずにカフェへ配置できます(クイック機能)<br>・詳細では左右の矢印で他のペットに切り替えられます<br>・稼ぎ力、集客力、速度、特殊効果が確認できます（アイコン右上には、毎秒の稼ぎと集客を表示します）<br>・持ち物の図鑑のアイコンをタップすると、性能を確認できます（未入手のキャラもシルエットのまま性能を見られます）`],
 ['卵の弾き方',`いらない卵は手放せます。<br>・孵化中の卵をタップ →「孵化を放棄」で孵化を中断します。<b>支払ったコインは戻りません</b><br>・孵化した後にいらないペットが出たときは、獲得画面の「野生に放つ」を選べば獲得されません`],
 ['孵化加速',`孵化は待つ以外にも早められます。<br>・ふつう／レアな卵は、スキップ券（残り回数あり）で即孵化できます<br>・孵化中の卵をタップ →「スキップする」で、コインを使って時間を短縮できます（2億コイン＝1分）<br>・URキャラを持っていると、全ての卵の孵化時間が5分短くなります（同名は重複しません）<br>・イベント卵は、孵化中の卵をタップ →「無料スキップ」で即孵化できます（初期5回。ミッションで増えます）`],
 ['クイック機能',`長押しなどの近道操作です。<br>・カフェ画面：ペットを長押しでカフェから外す<br>・持ち物：ペットを長押しで「野生に放ちますか？」を表示<br>・ペット管理：長押しで配置（外すときは詳細画面かカフェ画面から）<br>設定画面で、ON/OFFを切り替えられます。`],
+['通信（交換・協力パーティ）',`右上の「通信」ボタンから、「交換」と「協力パーティ」を選べます。<br>・交換：合言葉でつないだ相手とキャラを交換します<br>・協力パーティ：2〜3人でつなぎます。カフェで同時に連打すると、LR・ERの連打ボーナスが、2人で3倍・3人で3.5倍になります。ヒビ割りモードで卵を連打すると、仲間の卵も連打できます（連打する人が切り替え可）<br>・つないだ後は、他の画面に移動してもパーティは続きます`],
 ['計算式の確認',`設定の「計算式を見る」で、今の配置の倍率や速度がどう計算されているかを確認できます。<br>・ペットごとの稼ぎ／集客／速度の計算過程<br>・着地時の確率効果と期待値<br>また、設定の「テキスト縮小モード」で、稼いだ数の表示を小さくできます。`],
 ['引き継ぎ機能',`機種変更のときは、設定画面の「引き継ぎコード」をコピーして、新しい端末の「引き継ぐ」に貼り付けます。<br>※ 引き継ぎをすると、孵化中・孵化済みの卵はすべて破棄されます。<br>データはブラウザ内に保存されるため、消えることがあります。数日に1回はコードをコピーして保管してください。アプリ内ブラウザ（LINE・Xなど）では消えやすいので Safari / Chrome で開いてください。iPhoneは「ホーム画面に追加」がおすすめです。`],
 ['初心者ミッション',`カフェ画面のミッションボタンから、初心者パネルミッションを確認できます。<br>全てクリアすると「ハロウィン卵無料チケット」と「クリスマス卵無料チケット」が1枚ずつもらえます。チケットは持ち物から使えます。<br>「通常」タブのパネルミッションは、初心者ミッションをクリアしていなくても、達成した項目から順に報酬を受け取れます。`]];
@@ -612,7 +613,7 @@ setInterval(save,5000);document.addEventListener('visibilitychange',()=>{if(docu
 let pv=null;const AU={};let bg;
 let AC=null;const AB={},LS={};
 function actx(){if(AC===null){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(e){AC=0}}return AC||null}
-function unlockAud(){const c=actx();if(c&&c.state!='running'&&c.resume){try{const r=c.resume();if(r&&r.catch)r.catch(()=>{})}catch(e){}}['tap','kakutoku'].forEach(loadSnd)}
+function unlockAud(){const c=actx();if(c&&c.state!='running'&&c.resume){try{const r=c.resume();if(r&&r.catch)r.catch(()=>{})}catch(e){}}['tap','kakutoku','rendatap'].forEach(loadSnd)}
 function loadSnd(n){if(n in AB)return;AB[n]=0;const c=actx();if(!c){AB[n]=null;return}
  fetch(n+'.wav').then(r=>{if(!r.ok)throw 0;return r.arrayBuffer()}).then(b=>new Promise((ok,ng)=>{const q=c.decodeAudioData(b,ok,ng);if(q&&q.catch)q.catch(ng)})).then(buf=>{AB[n]=buf}).catch(()=>{AB[n]=null})}
 function snd(n,v=1){if(!CFG.se)return;const t=performance.now();if(LS[n]&&t-LS[n]<60)return;LS[n]=t;const c=actx();loadSnd(n);const b=AB[n];
@@ -791,15 +792,15 @@ function meaSetup(){const pl=placed().slice(0,5),pd=pmLoad();if(!pl.length&&!pd)
 <div class="pn fm"><b>計測対象（カフェ配置中）</b><div class="mpl" style="margin-top:6px">${pl.map(p=>`<div class="mi">${ic(C[p.c])}</div>`).join('')}</div><div style="font-size:11.5px;margin-top:4px">${L.join(' ／ ')}</div></div>
 <h3>計測時間</h3><div class="sg">${[1,3,10].map(d=>`<button class="btn${CFG.md==d?' pri':''}" onclick="meaSet('md',${d})">${d}分計測</button>`).join('')}</div>
 <h3>想定</h3><div class="sg"><button class="btn${CFG.mo?'':' pri'}" onclick="meaSet('mo',0)">オンライン</button><button class="btn${CFG.mo==1?' pri':''}" onclick="meaSet('mo',1)">オフライン</button><button class="btn${CFG.mo==2?' pri':''}" onclick="meaSet('mo',2)">連打</button></div>
-<div style="font-size:11.5px;margin-top:4px;color:var(--cocoa)">${CFG.mo==2?'連打：カフェを連打し続けた想定で、UR以下(UR・SSR・SR・R)のキャラの速度が3倍(間隔1/3)になります。ER・LRは対象外です':CFG.mo==1?'オフライン：着地間隔は3倍、効果は期待値で計算（着地回数は小数になります）':'オンライン：実際の着地・確率効果を再現してシミュレーションします'}</div>
+<div style="font-size:11.5px;margin-top:4px;color:var(--cocoa)">${CFG.mo==2?'連打：カフェを連打し続けた想定で、UR以下(UR・SSR・SR・R)のキャラの速度が3倍(間隔1/3)になります。LR・ERは速度は変わらず、着地時に得るコインと集客コインが2倍になります（協力パーティ想定：2人で3倍／3人で3.5倍）':CFG.mo==1?'オフライン：着地間隔は3倍、効果は期待値で計算（着地回数は小数になります）':'オンライン：実際の着地・確率効果を再現してシミュレーションします'}</div>${CFG.mo==2?`<div class="sg" style="margin-top:6px">${[1,2,3].map(n=>`<button class="btn${(CFG.mp||1)==n?' pri':''}" onclick="meaSet('mp',${n})">${n}人で連打</button>`).join('')}</div>`:''}
 <h3>計測速度 ×<span id="mxv">${CFG.mx}</span></h3><div class="mx"><span style="font-size:12px">2</span><input type="range" min="2" max="200" step="1" value="${CFG.mx}" oninput="meaX(this.value)"><span style="font-size:12px">200</span></div>
 <div class="mcp">${[2,5,10,20,50,100,200].map(n=>`<button class="btn${CFG.mx==n?' pri':''}" onclick="meaSet('mx',${n})">×${n}</button>`).join('')}</div>
 <div id="mest" style="font-size:12.5px;margin:8px 0;color:var(--cocoa)"></div>
 <div style="font-size:11px;color:var(--cocoa);margin-bottom:6px">※計測は別計算で行うため、所持コインや現在のペット状態には影響しません。イチゴツリー わたげの着地カウントは0から始まります。</div>
 <div class="pn fm" style="font-size:11.5px">プレイモードのデータ：${pmTxt(pd)}</div><button class="btn pri" style="width:100%;margin:0 0 6px" onclick="meaGo(1)">プレイモード配置キャラで試す</button><div class="bts"><button class="btn pri" onclick="meaGo()">計測開始</button><button class="btn" onclick="cl()">やめる</button></div>`);meaEst()}
 function meaGo(pm){if(MEA)return;let pl,sm;
- if(pm){const pd=pmLoad();if(!pd)return toast('プレイモードのデータがありません');const bk=S;S=pd;try{pl=placed().slice(0,5);if(!pl.length)return toast('プレイモードでカフェにペットが配置されていません');sm=simNew(pl,CFG.mo==1,CFG.mo==2)}finally{S=bk}}
- else{pl=placed().slice(0,5);if(!pl.length)return toast('カフェにペットが配置されていません');sm=simNew(pl,CFG.mo==1,CFG.mo==2)}
+ if(pm){const pd=pmLoad();if(!pd)return toast('プレイモードのデータがありません');const bk=S;S=pd;try{pl=placed().slice(0,5);if(!pl.length)return toast('プレイモードでカフェにペットが配置されていません');sm=simNew(pl,CFG.mo==1,CFG.mo==2);sm.pn=CFG.mp||1}finally{S=bk}}
+ else{pl=placed().slice(0,5);if(!pl.length)return toast('カフェにペットが配置されていません');sm=simNew(pl,CFG.mo==1,CFG.mo==2);sm.pn=CFG.mp||1}
  MEA={s:sm,pm:pm?1:0,dur:CFG.md*6e4,x:CFG.mx,off:CFG.mo==1,rp:CFG.mo==2,t0:performance.now(),lb:meaLabels(pl)};
  M(`<div class="rw"><b>計測中…</b></div><div class="pn fm">${CFG.md}分計測 ／ ${mol(CFG.mo==1,CFG.mo==2)}想定 ／ ×${CFG.mx}倍速<br>カフェの演出は停止し、別計算でシミュレーションしています。</div>
 <div class="g" style="height:14px;margin:10px 0"><i id="mpb" style="width:0%"></i></div><div id="mtx" style="font-size:13px;text-align:center"></div>
@@ -866,14 +867,14 @@ const hwA=()=>placed().some(q=>C[q.c].n=='おばけちょこ&ぱん'&&(q.hw||0)>
 function land(p,i,inst){if(!p.pl||MEA||CP)return;const c=C[p.c],n=c.n,k=calc(p),sm=snowOn()?2:1,B=m=>1+(m-1)*sm,bt=m=>Math.round(B(m)*10)/10,wc=wfx(p),WE=wef(p),pq=b=>wc=='h0'?Math.min(1,Math.max(b,.75*WE)):b;
  let e=k.e,a=k.a,r=Math.random(),bo=0,sb=!!p.sx;delete p.sx;const bj=p.bj;p.bj=0;
  if(inst){a*=B(1.5);bo=1;log('トナカイボルトが即時着地！集客コインを'+bt(1.5)+'倍獲得！')}else{
-  if((n=='コウモリちょこ'||n=='おばけぷりん')&&r<pq(.25)){bo=1;n=='コウモリちょこ'?fxBat():fxGhost();const hit=[];placed().slice(0,5).forEach(q=>LFT(C[q.c].n).forEach(([pr,m1,m2])=>{if(Math.random()<pr){e*=B(m1);a*=B(m2);hit.push(C[q.c].n)}}));log(n+'が発動！配置キャラ全員の着地効果を発動！'+(hit.length?'（'+hit.join('・')+'）':''))}
+  if((n=='コウモリちょこ'||n=='おばけぷりん')&&r<pq(.25)){bo=1;n=='コウモリちょこ'?fxBat():fxGhost();const hit=[],pl5=placed().slice(0,5),tg=pl5[Math.floor(Math.random()*pl5.length)],tn=C[tg.c].n;LFT(tn).forEach(([pr,m1,m2])=>{if(Math.random()<pr){e*=B(m1);a*=B(m2);hit.push(tn)}});log(n+'が発動！ランダムな1人（'+tn+'）の着地効果を発動！'+(hit.length?'':'（効果なし）'))}
  if(placed().some(q=>C[q.c].n=='サンタぱんぴー')&&Math.random()<.3){e*=B(2);a*=B(2);bo=1;log('クリティカル着地！コインと集客コインを'+bt(2)+'倍獲得！')}
  if(n=='野菜いっぱいぱんぴー&かのん'&&Math.random()<.2){a*=B(2);bo=1;fxProj(i,'carrot.png','🥕',3,40,ORP);log('野菜いっぱいぱんぴー&かのんが発動！集客コインを'+bt(2)+'倍獲得！')}
  if(n=='コウモリれもん'){e*=B(5);a*=B(5);bo=1;fxProj(i,'yellow_bat.png','🦇',3,46,YEP);log('コウモリれもんが発動！コインと集客コインを'+bt(5)+'倍獲得！')}
  if(n=='ゴーストロケット ぱんぴー'&&bj){e*=B(3);bo=1;fxProj(i,'ghost.png','👻',3,44,GHP);log('ゴーストロケット ぱんぴーの大ジャンプ！コインを'+bt(3)+'倍獲得！')}
  if(wc=='x1'&&Math.random()<Math.min(1,.5*WE)){const m=wm(2,WE);e*=B(m);a*=B(m);bo=1;log('クリスマスの剣が発動！コインと集客コインを'+bt(m)+'倍獲得！')}
  if(wc=='h2'||wc=='x2'){const m=wm(1.5,WE);e*=B(m);a*=B(m)}}
- if(hwA())a*=B(4);
+ if(hwA())a*=B(4);if(['LR','ER'].includes(c.r)&&rdOn()){const rm=rdMul();e*=rm;a*=rm;bo=1}
  {const cn=wc=='x0'?wm(2,WE):1,w=placed().find(q=>C[q.c].n=='イチゴツリー わたげ');if(w){const l0=w.ld||0;w.ld=l0+cn;if(Math.floor(w.ld/1e3)>Math.floor(l0/1e3)){w.sn=Date.now()+3e4;log('「雪降り」発動！30秒間、着地時の効果が2倍')}}}
  if(sb){const bn=a*1.5*sm;e+=bn;bo=1;log(n+'のプレゼントジャンプ着地！集客コインの'+(1.5*sm)+'倍のコインを獲得！')}
  {const h=placed().find(q=>C[q.c].n=='おばけちょこ&ぱん');if(h){const h0=h.hcn||0;h.hcn=h0+e;if(Math.floor(h.hcn/1e8)>Math.floor(h0/1e8)){h.hw=Date.now()+1e4;log('「Halloween」発動！10秒間、全員の速度-20%・集客コイン4倍')}}}
@@ -892,7 +893,7 @@ function lgr(){const f=[],pl=placed(),w=pl.find(p=>C[p.c].n=='イチゴツリー
 setInterval(()=>{if(cur!=0||document.hidden||CFG.lite||CFG.lv==2||CP||!hwA()||Math.random()>.8)return;const L=$('fxs');if(!L)return;const e=document.createElement('i');e.className='sf gh';e.style.cssText=`--l:${ri(0,100)}%;--w:${ri(22,36)}px;--x:${ri(-30,30)}px;--t:${(3.5+Math.random()*2).toFixed(2)}s`;e.innerHTML='<img src="ghost.png" draggable="false" onerror="this.outerHTML=\'👻\'">';L.append(e);setTimeout(()=>e.remove(),5800)},250);
 /* 着地時効果リスト(オフライン期待値用) */
 LND=(c,p)=>{const n=c.n,r=[],wc=p?wfx(p):'',WE=p?wef(p):1,q=b=>wc=='h0'?Math.min(1,Math.max(b,.75*WE)):b;
- if(n=='コウモリちょこ'||n=='おばけぷりん')PL().forEach(y=>LFT(C[y.c].n).forEach(([pr,a1,a2])=>r.push(['25%で全員の着地効果('+C[y.c].n+')',q(.25)*pr,a1,a2])));
+ if(n=='コウモリちょこ'||n=='おばけぷりん'){const N0=PL().length;PL().forEach(y=>LFT(C[y.c].n).forEach(([pr,a1,a2])=>r.push(['25%でランダム1人を選択→その着地効果('+C[y.c].n+')',q(.25)*pr/N0,a1,a2])))};
  if(n=='野菜いっぱいぱんぴー&かのん')r.push(['20%で集客×2',.2,1,2]);if(n=='コウモリれもん')r.push(['100%で稼ぎ・集客×5',1,5,5]);
  if(n=='ゴーストロケット ぱんぴー')r.push(['大ジャンプで稼ぎ×3',q(.5),3,1]);if(n=='トナカイボルト')r.push(['25%で即時着地(集客×1.5)',.25,2,2.5]);
  if(wc=='x1')r.push(['武器:50%でコイン・集客×2',Math.min(1,.5*WE),wm(2,WE),wm(2,WE)]);if(wc=='h2'||wc=='x2')r.push(['武器:稼ぎ・集客×1.5',1,wm(1.5,WE),wm(1.5,WE)]);if(PL().some(y=>C[y.c].n=='サンタぱんぴー'))r.push(['クリティカル着地 30%で×2',.3,2,2]);return r};
@@ -903,12 +904,12 @@ function simNew(pl,off,rp){SIMC=1;LNDPL=pl;const o=pl.map((p,i)=>{const c=C[p.c]
 function simLand(s,i,t,inst){const x=s.o[i],c=x.c,k=x.k,n=c.n,sm=(s.w>=0&&s.sn>t)?2:1,B=m=>1+(m-1)*sm,wc=x.wc,WE=x.we,pq=b=>wc=='h0'?Math.min(1,Math.max(b,.75*WE)):b;
  let e=k.e,a=k.a,sb=!!x.sx;const r=Math.random();x.sx=0;
  if(inst)a*=B(1.5);else{
- if((n=='コウモリちょこ'||n=='おばけぷりん')&&r<pq(.25))s.o.forEach(y=>LFT(y.c.n).forEach(([pr,m1,m2])=>{if(Math.random()<pr){e*=B(m1);a*=B(m2)}}));
+ if((n=='コウモリちょこ'||n=='おばけぷりん')&&r<pq(.25)){const y=s.o[Math.floor(Math.random()*s.o.length)];LFT(y.c.n).forEach(([pr,m1,m2])=>{if(Math.random()<pr){e*=B(m1);a*=B(m2)}})};
  if(s.o.some(y=>y.c.n=='サンタぱんぴー')&&Math.random()<.3){e*=B(2);a*=B(2)}
  if(n=='野菜いっぱいぱんぴー&かのん'&&Math.random()<.2)a*=B(2);if(n=='コウモリれもん'){e*=B(5);a*=B(5)}
  if(n=='ゴーストロケット ぱんぴー'&&Math.random()<pq(.5))e*=B(3);
  if(wc=='x1'&&Math.random()<Math.min(1,.5*WE)){const m=wm(2,WE);e*=B(m);a*=B(m)}if(wc=='h2'||wc=='x2'){const m=wm(1.5,WE);e*=B(m);a*=B(m)}}
- if(s.hp>=0&&s.hw>t)a*=B(4);
+ if(s.hp>=0&&s.hw>t)a*=B(4);if(s.rp&&['LR','ER'].includes(c.r)){const rm=RDM[s.pn||1];e*=rm;a*=rm}
  const cn=wc=='x0'?wm(2,WE):1;if(s.w>=0){const l0=s.ld;s.ld+=cn;if(Math.floor(s.ld/1e3)>Math.floor(l0/1e3))s.sn=t+3e4}
  if(sb)e+=a*1.5*sm;
  x.e+=e;x.a+=a;x.n+=cn;if(x.last!=null){const d=t-x.last;if(d<x.mi)x.mi=d}x.last=t;if(e>x.me)x.me=e;if(a>x.ma)x.ma=a;
@@ -952,7 +953,7 @@ function twHTML(){let h=`<div class="rw"><span style="font-size:12px;color:var(-
  rs=function(){_rs();const el=$('s2'),hd=el.querySelector('.tsh'),tc=el.querySelector('.tsc');if(tc)tc.insertAdjacentHTML('beforeend',`<button class="btn${TF=='W'?' pri':''}" onclick="tsF('W')">武器${TWS.length?'('+TWS.length+')':''}</button>`);if(TF=='W'&&hd){const st=el.scrollTop;el.innerHTML=hd.outerHTML+twHTML();el.scrollTop=st}};
  tsGet=function(){NW=1;try{_tg()}finally{NW=0}}}
 /* カフェのタップ加速 / 効果音・拡大・ドラッグ対策 */
-document.addEventListener('pointerdown',e=>{if(cur==0&&!MEA&&e.target.closest&&e.target.closest('#s0')){TAPU=Date.now()+300;TP2=TP1;TP1=Date.now()}},true);
+document.addEventListener('pointerdown',e=>{if(cur==0&&!MEA&&e.target.closest&&e.target.closest('#s0')){TAPU=Date.now()+300;TP2=TP1;TP1=Date.now();if(rapid()){snd('rendatap');ptTap()}}},true);
 function snd(n,v=1){if(!CFG.se)return;const t=performance.now();if(LS[n]&&t-LS[n]<25)return;LS[n]=t;const c=actx();loadSnd(n);const b=AB[n];
  if(c&&b){const go=()=>{try{const s=c.createBufferSource(),g=c.createGain();g.gain.value=v;s.buffer=b;s.connect(g);g.connect(c.destination);s.start(0)}catch(e){}};if(c.state=='running')go();else{try{c.resume().then(go,go)}catch(e){go()}}return}
  if(b===0)return;try{const a=new Audio(n+'.wav');a.volume=v;a.play().catch(()=>{})}catch(e){}}
@@ -1005,7 +1006,7 @@ function nmGet(i){if(S.nm[i]||!NMS[i][1]())return;S.nm[i]=1;NMS[i][3]();snd('kak
 var LNDPL=null;function PL(){return LNDPL||placed().slice(0,5)}
 function LFT(n){const r=[];if(n=='野菜いっぱいぱんぴー&かのん')r.push([.2,1,2]);if(n=='コウモリれもん')r.push([1,5,5]);if(n=='ゴーストロケット ぱんぴー')r.push([.5,3,1]);return r}
 {const SP='配置時、配置キャラ全員の速度がアップ。速度バフ持ち(魔女ぱんぴー・魔法使いぴの・オオカミこぷく・かのん・かぼちゃぱん)の配置が3体以下なら10%、4体以上なら5%',XB='配置時、配置キャラ全員の稼ぎ力と集客力が1.3倍';
-Object.assign(EF,{コウモリちょこ:'着地時、25%の確率で配置キャラ全員の着地効果を、コウモリちょこが発動者として発動する',おばけぷりん:'着地時、25%の確率で配置キャラ全員の着地効果を、おばけぷりんが発動者として発動する',
+Object.assign(EF,{コウモリちょこ:'着地時、25%の確率で配置キャラの中からランダムに1人を選び、そのキャラの着地効果を、コウモリちょこが発動者として発動する',おばけぷりん:'着地時、25%の確率で配置キャラの中からランダムに1人を選び、そのキャラの着地効果を、おばけぷりんが発動者として発動する',
 かぼちゃぱん:'配置時、ハロウィンキャラ(自身含む)の速度が20%アップ／1体まで配置可',魔女ぱんぴー:SP,魔法使いぴの:SP,オオカミこぷく:SP,
 コウモリれもん:'配置時、自身の速度-300%(間隔が4倍)。着地時、100%でコインと集客コインが5倍',
 'おばけちょこ&ぱん':'【Halloween】配置時、コインを1億枚稼ぐ毎に10秒間「Halloween」状態に入る。この間、配置中の全キャラの速度-20%、稼ぐ集客コインが4倍',
@@ -1066,4 +1067,69 @@ function exR(){const el=$('s4');if(cur!=4)return;const st=el.scrollTop,E=EX;
 {const _g=go;go=function(k){exLeave();$('s4').classList.remove('on');$('side').style.display='';_g(k);$('exb').style.display=$('msnb').style.display}}
 if(TM)$('exb').style.display='none';
 window.addEventListener('pagehide',exLeave);
+
+/* ===== 通信（交換 / 協力パーティ） ===== */
+if(CFG.pce===undefined)CFG.pce=1;
+const RDM=[0,2,3,3.5];
+const rdOn=()=>Date.now()<TAPU&&rapid();
+let PT=null,PTC='',CMV='menu';
+const ptAct=()=>{const T=PT;if(!T)return 0;const n=Date.now();return Object.values(T.act).filter(v=>v>n).length};
+const rdMul=()=>RDM[Math.min(3,1+ptAct())];
+const ptId=c=>'petcafe-pt-'+[...new TextEncoder().encode(c)].map(b=>b.toString(16)).join('');
+function ptBadge(){const b=$('exb');if(b)b.innerHTML=PT&&PT.n>1?'<span class="fb">通信<br>🤝'+PT.n+'人</span>':'<span class="fb">通信</span>'}
+function cmOpen(){CMV='menu';cur=4;['s0','s1','s2','s3'].forEach(x=>$(x).classList.remove('on'));$('s4').classList.add('on');$('side').style.display='none';cmR()}
+function cmR(){if(cur!=4)return;if(CMV=='ex')return exR();if(CMV=='pt')return ptR();
+ $('s4').innerHTML='<div class="hd"><b>通信</b><button class="btn" onclick="go(0)">戻る</button></div><div class="bts"><button class="btn pri" style="width:100%;margin:0" onclick="cmEx()">交換</button><button class="btn pri" style="width:100%;margin:0" onclick="cmPt()">協力パーティ'+(PT&&PT.n>1?'（参加中 '+PT.n+'人）':'')+'</button></div><div class="pn" style="font-size:13px">交換：キャラを交換します<br>協力パーティ：2〜3人でつないで、同時連打のボーナスを得ます</div>'}
+function cmEx(){CMV='ex';exOpen()}
+function cmPt(){CMV='pt';ptR()}
+function cmBack(){CMV='menu';cmR()}
+{const _x=exR;exR=function(){if(CMV=='ex')_x()}}
+exBack=function(){exLeave();CMV='menu';cmR()};
+/* パーティ接続（ホスト中継のスター型・最大3人） */
+function ptLoad(cb){if(window.Peer)return cb();const sc=document.createElement('script');sc.src='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js';sc.onload=cb;sc.onerror=()=>{if(PT){PT.dead=1;PT.st='通信ライブラリを読み込めません（オンライン環境が必要です）';ptR()}};document.head.append(sc)}
+function ptLeave(){if(PT){const T=PT;PT=null;T.conns.forEach(c=>{try{c.close()}catch(e){}});try{T.peer&&T.peer.destroy()}catch(e){}}ptBadge()}
+function ptQuit(){ptLeave();ptR()}
+const ptSend=(m,skip)=>{const T=PT;if(!T)return;T.conns.forEach(c=>{if(c.open&&c!==skip){try{c.send(m)}catch(e){}}})};
+function ptN(T){if(PT!==T)return;T.n=1+T.conns.filter(c=>c.open).length;ptSend({t:'n',n:T.n});T.st=T.n>1?'つながりました！（'+T.n+'人）':'仲間の参加を待っています…（合言葉：'+T.code+'）';ptBadge();ptR()}
+function ptStart(mode){const code=(PTC||'').trim()||'ぺっと';ptLeave();const T=PT={code,host:0,conns:[],n:1,act:{},st:'接続中…',ls:0};ptR();
+ ptLoad(()=>{if(PT!==T)return;mode?host():join();
+  function host(){const p=T.peer=new Peer(ptId(code));
+   p.on('open',()=>{T.host=1;T.st='パーティを作りました。仲間の参加を待っています…（合言葉：'+code+'）';ptR()});
+   p.on('connection',c=>{if(T.conns.length>=2){c.on('open',()=>{try{c.send({t:'full'})}catch(e){}setTimeout(()=>{try{c.close()}catch(e){}},300)});return}
+    T.conns.push(c);c.on('open',()=>ptN(T));c.on('data',d=>ptRecv(T,c,d));
+    c.on('close',()=>{T.conns=T.conns.filter(x=>x!==c);delete T.act[c.peer];ptN(T)})});
+   p.on('error',e=>{if(PT!==T)return;if(e.type=='unavailable-id'){try{p.destroy()}catch(x){}T.st='同じ合言葉のパーティがあるので入ります…';ptR();join()}else{T.dead=1;T.st='接続エラー：'+e.type;ptR()}})}
+  function join(){const p=T.peer=new Peer();
+   p.on('open',()=>{const c=p.connect(ptId(code),{reliable:true});T.conns=[c];
+    c.on('open',()=>{T.st='パーティに参加しました！';T.n=2;ptBadge();ptR()});
+    c.on('data',d=>ptRecv(T,c,d));
+    c.on('close',()=>{if(PT===T){T.conns=[];T.n=1;T.act={};T.dead=1;if(T.st.indexOf('満員')<0)T.st='パーティから切断されました';ptBadge();ptR()}})});
+   p.on('error',e=>{if(PT!==T)return;T.dead=1;T.st=e.type=='peer-unavailable'?'その合言葉のパーティがありません。先に誰かが「パーティを作る」を選んでください':'接続エラー：'+e.type;ptR()})}})}
+function ptRecv(T,c,d){if(PT!==T||!d)return;
+ if(d.t=='r'){const f=T.host?c.peer:String(d.f||'h');T.act[f]=Date.now()+350;if(T.host)ptSend({t:'r',f},c)}
+ else if(d.t=='g'){const i=+d.i;if(Number.isInteger(i)&&i>=0&&i<S.slots.length)pCrk(i);if(T.host)ptSend({t:'g',i},c)}
+ else if(d.t=='n'){T.n=Math.min(3,Math.max(1,+d.n||1));ptBadge();ptR()}
+ else if(d.t=='full'){T.dead=1;T.st='このパーティは満員です（最大3人）';T.n=1;ptR()}}
+function ptTap(){const T=PT;if(!T||T.n<2)return;const t=Date.now();if(t-T.ls<100)return;T.ls=t;ptSend({t:'r'})}
+/* 卵の連打（仲間にも送る／仲間から受ける） */
+function pCrk(i){let j=i,s=S.slots[j];if(!s||E[s.t].ev){j=S.slots.findIndex(x=>x&&!E[x.t].ev);if(j<0)return;s=S.slots[j]}
+ if(s.ready<=Date.now())return;const cs=crkS();s.ready-=cs*1000;if(cur!=2)return;
+ if(s.ready<=Date.now())return re();const t=$('tm'+j);if(t)t.textContent=tl(s.ready-Date.now());const g=t&&t.parentNode.querySelector('.eg');
+ if(g){g.classList.remove('crk');void g.offsetWidth;g.classList.add('crk');const d=document.createElement('i');d.className='cpop';d.textContent='-'+cs+'秒';g.append(d);setTimeout(()=>d.remove(),700)}}
+{const _s2=sk2;sk2=function(i){const s=S.slots[i],ok=!!(CFG.crk&&s&&!E[s.t].ev&&s.ready>Date.now()&&PT&&PT.n>1&&CFG.pce);_s2(i);if(ok)ptSend({t:'g',i})}}
+{const _r2=re;re=function(){_r2();if(TM||!PT||PT.n<2)return;const t=$('tg_crk'),bx=t&&t.parentNode,sl=$('s2').querySelector('.slots'),h='<div style="text-align:center;margin-top:6px">'+tgb('pce','仲間の卵も連打する ')+'<div style="font-size:11px;color:var(--cocoa)">協力パーティ中、ヒビ割りモードで卵をタップすると、仲間の卵も連打されます（イベント卵は対象外）</div></div>';if(bx)bx.insertAdjacentHTML('afterend',h);else if(sl)sl.insertAdjacentHTML('afterend',h)}}
+/* パーティ画面 */
+function ptR(){const el=$('s4');if(cur!=4||CMV!='pt')return;const st=el.scrollTop,T=PT;
+ let h='<div class="hd"><b>協力パーティ</b><button class="btn" onclick="cmBack()">戻る</button></div>';
+ h+='<div class="pn" style="font-size:13px">2〜3人でつなぐ機能です。<br>・カフェで同時に連打すると、LR・ERの連打ボーナス(通常×2)が、2人で×3、3人で×3.5になります<br>・ヒビ割りモードで卵を連打すると、仲間の卵も連打されます（連打する人が切り替えできます）<br>・つないだ後は、カフェ画面などに戻ってもパーティは続きます</div>';
+ if(T&&T.st)h+='<div class="pn">'+T.st+'</div>';
+ if(!T||T.dead){
+  h+='<div class="pn">合言葉（同じ合言葉の人同士がつながります）<br><input value="'+PTC.replace(/"/g,'&quot;')+'" placeholder="ぺっと" oninput="PTC=this.value" style="width:100%;font:inherit;padding:6px;border:2px solid var(--latte);border-radius:8px;margin-top:4px"></div><div class="bts"><button class="btn pri" onclick="ptStart(1)">パーティを作る</button><button class="btn" onclick="ptStart(0)">パーティに入る</button></div><div class="warn">「作る」を選んで同じ合言葉のパーティが既にあれば、自動でそのパーティに入ります。最大3人までです。</div>'}
+ else{h+='<div class="pn"><b>メンバー：'+T.n+' / 3人</b><br><small>いま連打中の仲間：'+ptAct()+'人 → 連打ボーナス ×'+RDM[Math.min(3,1+ptAct())]+'（自分も連打中のとき）</small></div>'
+  +'<div class="pn" style="text-align:center">'+tgb('pce','仲間の卵も連打する ')+'<div style="font-size:11px;margin-top:4px">ヒビ割りモードで卵をタップしたとき、仲間の卵も連打します</div></div><div class="bts"><button class="btn" onclick="ptQuit()">パーティから抜ける</button></div>'}
+ el.innerHTML=h;el.scrollTop=st}
+/* カフェ画面の表示 */
+{const _l=lgr;lgr=function(){_l();if(PT&&PT.n>1&&$('lg')){const a=ptAct();$('lg').insertAdjacentHTML('afterbegin','<div>🤝協力パーティ '+PT.n+'人（連打中の仲間 '+a+'人 → LR・ER連打ボーナス ×'+RDM[Math.min(3,1+a)]+'）</div>')}}}
+setInterval(()=>{if(cur==0&&PT&&PT.n>1)lgr()},500);
+window.addEventListener('pagehide',ptLeave);
 </script></body></html>
